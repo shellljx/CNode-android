@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">CNode社区</string>
+
+    <!--BottomNavigation title-->
+    <string name="title_homePage">首页</string>
+    <string name="title_category">分类</string>
+    <string name="title_mine">我的</string>
+
+    <string name="last_reply">最后回复: %s</string>
+</resources>
