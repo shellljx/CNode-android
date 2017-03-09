@@ -1,6 +1,8 @@
 package com.licrafter.cnode.ui.activity;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -35,12 +37,30 @@ import butterknife.BindView;
  **/
 public class TopicDetailActivity extends BaseActivity implements MvpView {
 
-    @BindView(R.id.detailRecyclerView)
+    @BindView(R.id.comments_recyclerview)
     RecyclerView mDetailRecyclerView;
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
     @BindView(R.id.refreshLayout)
     SwipeRefreshLayout mRefreshLayout;
+    @BindView(R.id.layout_bottom_sheet)
+    View mBottomSheet;
+
+    //header
+    @BindView(R.id.iv_avatar)
+    RoundedImageView iv_avatar;
+    @BindView(R.id.tv_user_name)
+    TextView tv_user_name;
+    @BindView(R.id.tv_title)
+    TextView tv_title;
+    @BindView(R.id.tv_created_at)
+    TextView tv_created_at;
+    @BindView(R.id.tv_visit_count)
+    TextView tv_visit_count;
+    @BindView(R.id.tv_tab)
+    TextView tv_tab;
+    @BindView(R.id.wv_content)
+    CNodeWebView mk_content;
 
     private TopicDetailPresenter mPresenter = new TopicDetailPresenter();
     private DetailAdapter mAdapter;
@@ -78,16 +98,25 @@ public class TopicDetailActivity extends BaseActivity implements MvpView {
             }
         });
 
-        mDetailRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        BottomSheetBehavior behavior = BottomSheetBehavior.from(mBottomSheet);
+        behavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                mScrolledY += dy;
-                if (mScrolledY >= mMaxScroll) {
-                    mToolbar.setTitle(mDetail.getData().getTitle());
-                } else {
-                    mToolbar.setTitle(getString(R.string.title_topic_detail));
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                switch (newState) {
+                    case BottomSheetBehavior.STATE_COLLAPSED:
+                        mToolbar.setTitle(getString(R.string.title_topic_detail));
+                        break;
+                    case BottomSheetBehavior.STATE_EXPANDED:
+                        if (mDetail != null) {
+                            mToolbar.setTitle(mDetail.getData().getTitle());
+                        }
+                        break;
                 }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+
             }
         });
     }
@@ -134,7 +163,19 @@ public class TopicDetailActivity extends BaseActivity implements MvpView {
     public void notifyGetDetailSuccess(TopicDetailModel topicDetailModel) {
         mRefreshLayout.setRefreshing(false);
         mDetail = topicDetailModel;
+        initHeader();
         mAdapter.notifyDataSetChanged();
+    }
+
+    private void initHeader() {
+        TopicDetail detail = mDetail.getData();
+        ImageLoader.loadUrl(iv_avatar, detail.getAuthor().getAvatar_url());
+        tv_title.setText(detail.getTitle());
+        tv_user_name.setText(detail.getAuthor().getLoginname());
+        mk_content.loadHtml(detail.getContent());
+        tv_created_at.setText(DateUtils.format(detail.getCreate_at()));
+        tv_visit_count.setText(String.format(getString(R.string.visit_count), detail.getVisit_count()));
+        tv_tab.setText(String.format(getString(R.string.tab_name), detail.getTab()));
     }
 
     public class DetailAdapter extends RecyclerView.Adapter {
@@ -146,7 +187,7 @@ public class TopicDetailActivity extends BaseActivity implements MvpView {
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             switch (viewType) {
                 case TYPE_HEADER:
-                    return new DetailHeaderHolder(LayoutInflater.from(TopicDetailActivity.this).inflate(R.layout.item_detail_header, parent, false));
+                    return new ReplyCountHolder(LayoutInflater.from(TopicDetailActivity.this).inflate(R.layout.item_reply_count, parent, false));
                 case TYPE_ITEM:
                     return new ReplyHolder(LayoutInflater.from(TopicDetailActivity.this).inflate(R.layout.item_reply, parent, false));
                 default:
@@ -156,23 +197,15 @@ public class TopicDetailActivity extends BaseActivity implements MvpView {
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            if (holder instanceof DetailHeaderHolder) {
-                TopicDetail detail = mDetail.getData();
-                DetailHeaderHolder header = (DetailHeaderHolder) holder;
-                ImageLoader.loadUrl(header.iv_avatar, detail.getAuthor().getAvatar_url());
-                header.tv_title.setText(detail.getTitle());
-                header.tv_user_name.setText(detail.getAuthor().getLoginname());
-                header.mk_content.loadHtml(detail.getContent());
-                header.tv_created_at.setText(DateUtils.format(detail.getCreate_at()));
-                header.tv_visit_count.setText(String.format(getString(R.string.visit_count), detail.getVisit_count()));
-                header.tv_tab.setText(String.format(getString(R.string.tab_name), detail.getTab()));
-            } else if (holder instanceof ReplyHolder) {
+            if (holder instanceof ReplyHolder) {
                 ReplyHolder reply = (ReplyHolder) holder;
                 Reply rep = mDetail.getData().getReplies().get(position - 1);
                 ImageLoader.loadUrl(reply.iv_avatar, rep.getAuthor().getAvatar_url());
                 reply.tv_user_name.setText(rep.getAuthor().getLoginname());
                 reply.tv_created_at.setText(DateUtils.format(rep.getCreate_at()));
                 reply.tv_content.setRichText(rep.getContent());
+            } else if (holder instanceof ReplyCountHolder) {
+                ((ReplyCountHolder) holder).tv_reply_count.setText(String.format(getString(R.string.reply_count), mDetail.getData().getReplies().size()));
             }
         }
 
@@ -195,28 +228,6 @@ public class TopicDetailActivity extends BaseActivity implements MvpView {
         }
     }
 
-    public class DetailHeaderHolder extends RecyclerView.ViewHolder {
-
-        private RoundedImageView iv_avatar;
-        private TextView tv_user_name;
-        private TextView tv_title;
-        private TextView tv_created_at;
-        private TextView tv_visit_count;
-        private TextView tv_tab;
-        private CNodeWebView mk_content;
-
-        public DetailHeaderHolder(View itemView) {
-            super(itemView);
-            iv_avatar = (RoundedImageView) itemView.findViewById(R.id.iv_avatar);
-            tv_user_name = (TextView) itemView.findViewById(R.id.tv_user_name);
-            tv_title = (TextView) itemView.findViewById(R.id.tv_title);
-            tv_created_at = (TextView) itemView.findViewById(R.id.tv_created_at);
-            tv_visit_count = (TextView) itemView.findViewById(R.id.tv_visit_count);
-            tv_tab = (TextView) itemView.findViewById(R.id.tv_tab);
-            mk_content = (CNodeWebView) itemView.findViewById(R.id.wv_content);
-        }
-    }
-
     public class ReplyHolder extends RecyclerView.ViewHolder {
 
         public RoundedImageView iv_avatar;
@@ -230,6 +241,16 @@ public class TopicDetailActivity extends BaseActivity implements MvpView {
             tv_user_name = (TextView) itemView.findViewById(R.id.tv_user_name);
             tv_created_at = (TextView) itemView.findViewById(R.id.tv_created_at);
             tv_content = (RichTextView) itemView.findViewById(R.id.tv_content);
+        }
+    }
+
+    public class ReplyCountHolder extends RecyclerView.ViewHolder {
+
+        public TextView tv_reply_count;
+
+        public ReplyCountHolder(View itemView) {
+            super(itemView);
+            tv_reply_count = (TextView) itemView.findViewById(R.id.tv_reply_count);
         }
     }
 }

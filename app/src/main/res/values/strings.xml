@@ -12,4 +12,5 @@
     <string name="unCollect">取消收藏</string>
     <string name="visit_count">浏览次数: %d</string>
     <string name="tab_name">来自版块: %s</string>
+    <string name="reply_count">回复 %d 条</string>
 </resources>
