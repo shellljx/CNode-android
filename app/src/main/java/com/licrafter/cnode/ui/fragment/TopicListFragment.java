@@ -14,14 +14,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.licrafter.cnode.R;
+import com.licrafter.cnode.base.BaseActivity;
 import com.licrafter.cnode.base.BaseFragment;
 import com.licrafter.cnode.model.TabModel;
-import com.licrafter.cnode.model.Topic;
+import com.licrafter.cnode.model.entity.Topic;
 import com.licrafter.cnode.mvp.presenter.TopicListPresenter;
 import com.licrafter.cnode.mvp.view.MvpView;
+import com.licrafter.cnode.ui.activity.TopicDetailActivity;
 import com.licrafter.cnode.utils.DateUtils;
 import com.licrafter.cnode.utils.ImageLoader;
 import com.licrafter.cnode.utils.TopicDividerDecoration;
+import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,12 +74,10 @@ public class TopicListFragment extends BaseFragment implements MvpView {
 
     @Override
     public void lazyLoad() {
-        if (mVisibleToUser && mPrepared) {
-            if (mTopicList.size() == 0) {
-                mPresenter.refresh();
-            } else {
-                mPresenter.setPageIndex(mPageIndex);
-            }
+        if (mTopicList.size() == 0) {
+            mPresenter.refresh();
+        } else {
+            mPresenter.setPageIndex(mPageIndex);
         }
     }
 
@@ -149,11 +150,11 @@ public class TopicListFragment extends BaseFragment implements MvpView {
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             if (viewType == TYPE_ITEM) {
-                TopicHolder holder = new TopicHolder(LayoutInflater.from(getContext()).inflate(R.layout.item_topic, parent, false));
+                final TopicHolder holder = new TopicHolder(LayoutInflater.from(getContext()).inflate(R.layout.item_topic, parent, false));
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        TopicDetailActivity.start((BaseActivity) getActivity(), mTopicList.get(holder.getAdapterPosition()).getId());
                     }
                 });
                 return holder;
@@ -205,7 +206,7 @@ public class TopicListFragment extends BaseFragment implements MvpView {
     public class TopicHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.iv_avatar)
-        ImageView avatar;
+        RoundedImageView avatar;
         @BindView(R.id.tv_tag)
         TextView tag;
         @BindView(R.id.tv_tag_normal)

@@ -2,23 +2,21 @@ package com.licrafter.cnode.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.licrafter.cnode.model.entity.Topic;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.licrafter.cnode.model.entity.TopicDetail;
 
 /**
  * author: shell
- * date 2017/2/24 下午3:50
+ * date 2017/3/1 上午10:51
  **/
-public class TabModel {
+public class TopicDetailModel {
 
+    @Expose
     @SerializedName("success")
-    @Expose
     private boolean success;
-    @SerializedName("data")
+
     @Expose
-    private List<Topic> data = new ArrayList<>();
+    @SerializedName("data")
+    private TopicDetail data;
 
     public boolean isSuccess() {
         return success;
@@ -28,11 +26,11 @@ public class TabModel {
         this.success = success;
     }
 
-    public List<Topic> getData() {
+    public TopicDetail getData() {
         return data;
     }
 
-    public void setData(List<Topic> data) {
+    public void setData(TopicDetail data) {
         this.data = data;
     }
 }

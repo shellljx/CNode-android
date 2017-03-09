@@ -1,12 +1,14 @@
 package com.licrafter.cnode;
 
 
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.view.MenuItem;
+import android.view.WindowManager;
 
 import com.licrafter.cnode.base.BaseActivity;
 import com.licrafter.cnode.ui.fragment.CategoryFragment;

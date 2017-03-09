@@ -22,7 +22,7 @@ public abstract class BaseFragment extends Fragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         mVisibleToUser = isVisibleToUser;
-        lazyLoad();
+        tryLoad();
     }
 
     @Nullable
@@ -39,8 +39,14 @@ public abstract class BaseFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         initView(view);
         bind();
-        lazyLoad();
+        tryLoad();
         setListeners();
+    }
+
+    private void tryLoad(){
+        if (mVisibleToUser&&mPrepared){
+            lazyLoad();
+        }
     }
 
     public abstract int setContentView();

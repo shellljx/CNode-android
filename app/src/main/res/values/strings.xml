@@ -5,6 +5,11 @@
     <string name="title_homePage">首页</string>
     <string name="title_category">分类</string>
     <string name="title_mine">我的</string>
+    <string name="title_topic_detail">文章详情</string>
 
     <string name="last_reply">最后回复: %s</string>
+    <string name="collect">收藏</string>
+    <string name="unCollect">取消收藏</string>
+    <string name="visit_count">浏览次数: %d</string>
+    <string name="tab_name">来自版块: %s</string>
 </resources>

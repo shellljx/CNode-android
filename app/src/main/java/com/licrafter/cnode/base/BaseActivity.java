@@ -1,7 +1,9 @@
 package com.licrafter.cnode.base;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.WindowManager;
 
 import butterknife.ButterKnife;
 

@@ -1,4 +1,4 @@
-package com.licrafter.cnode.model;
+package com.licrafter.cnode.model.entity;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

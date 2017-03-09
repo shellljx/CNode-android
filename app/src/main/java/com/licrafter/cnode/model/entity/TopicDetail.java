@@ -1,15 +1,17 @@
-package com.licrafter.cnode.model;
+package com.licrafter.cnode.model.entity;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * author: shell
- * date 2017/2/24 下午3:47
+ * date 2017/3/1 上午11:02
  **/
-public class Topic {
+public class TopicDetail {
 
     @SerializedName("id")
     @Expose
@@ -47,6 +49,18 @@ public class Topic {
     @SerializedName("author")
     @Expose
     private Author author;
+
+    @SerializedName("replies")
+    @Expose
+    private List<Reply> replies = new ArrayList<>();
+
+    public List<Reply> getReplies() {
+        return replies;
+    }
+
+    public void setReplies(List<Reply> replies) {
+        this.replies = replies;
+    }
 
     public String getId() {
         return id;

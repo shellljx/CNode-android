@@ -6,12 +6,14 @@
     android:background="?attr/selectableItemBackground"
     android:padding="10dp">
 
-    <ImageView
+    <com.makeramen.roundedimageview.RoundedImageView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/iv_avatar"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginRight="10dp"
-        android:scaleType="centerCrop"/>
+        android:layout_marginRight="5dp"
+        android:scaleType="fitCenter"
+        app:riv_corner_radius="5dp"/>
 
     <LinearLayout
         android:id="@+id/layout_title"
