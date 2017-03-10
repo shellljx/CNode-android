@@ -45,8 +45,8 @@
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:maxLines="1"
-                        android:textColor="@color/gray2"
-                        android:textSize="@dimen/text_size_normal"/>
+                        android:textColor="@color/white"
+                        android:textSize="20dp"/>
 
                     <ImageButton
                         android:id="@+id/btn_settings"

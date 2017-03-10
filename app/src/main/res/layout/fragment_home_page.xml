@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/include_toolbar"/>
+    <include layout="@layout/toolbar_create_topic"/>
 
     <FrameLayout
         android:id="@+id/home_page_content"

@@ -7,6 +7,7 @@
     <string name="title_mine">我的</string>
     <string name="title_notification">消息</string>
     <string name="title_topic_detail">文章详情</string>
+    <string name="title_notification_center">消息中心</string>
 
     <string name="last_reply">最后回复: %s</string>
     <string name="collect">收藏</string>

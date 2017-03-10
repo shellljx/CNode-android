@@ -9,7 +9,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -33,8 +32,6 @@ public class MineFragment extends BaseFragment implements MvpView {
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
-    @BindView(R.id.collapsing_toolbar)
-    CollapsingToolbarLayout mCollapsingToolbar;
     @BindView(R.id.appbar)
     AppBarLayout mAppbar;
 
@@ -52,6 +49,8 @@ public class MineFragment extends BaseFragment implements MvpView {
     RelativeLayout mProfitLayout;
     @BindView(R.id.tv_login)
     TextView mLoginView;
+    @BindView(R.id.tv_profit_name)
+    TextView mTitle;
 
     @BindView(R.id.tabLayout)
     TabLayout mTabLayout;
@@ -79,13 +78,25 @@ public class MineFragment extends BaseFragment implements MvpView {
 
     @Override
     public void initView(View root) {
+        mTitle.setText("shellljx");
         mViewPager.setAdapter(new Adapter(getChildFragmentManager()));
         mTabLayout.setupWithViewPager(mViewPager);
     }
 
     @Override
     public void setListeners() {
-
+        mAppbar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if (Math.abs(verticalOffset) == appBarLayout.getTotalScrollRange()) {
+                    mProfitLayout.setVisibility(View.INVISIBLE);
+                } else if (mProfitLayout.getVisibility() != View.VISIBLE) {
+                    mProfitLayout.setVisibility(View.VISIBLE);
+                }
+                float alpha = (float) Math.abs(verticalOffset) / appBarLayout.getTotalScrollRange();
+                mTitle.setAlpha(alpha);
+            }
+        });
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
