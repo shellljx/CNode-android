@@ -38,4 +38,5 @@ dependencies {
     compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
     compile 'com.makeramen:roundedimageview:2.3.0'
+    compile 'com.google.zxing:core:3.3.0'
 }

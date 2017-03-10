@@ -18,4 +18,19 @@ public class UserDetailModel {
     @Expose
     private UserDetail data;
 
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
+    }
+
+    public UserDetail getData() {
+        return data;
+    }
+
+    public void setData(UserDetail data) {
+        this.data = data;
+    }
 }

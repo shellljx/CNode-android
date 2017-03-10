@@ -182,6 +182,7 @@ public class TopicDetailActivity extends BaseActivity implements MvpView {
 
         private static final int TYPE_HEADER = 0x001;
         private static final int TYPE_ITEM = 0x002;
+        private static final int TYPE_EMPTY = 0x003;
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -190,6 +191,8 @@ public class TopicDetailActivity extends BaseActivity implements MvpView {
                     return new ReplyCountHolder(LayoutInflater.from(TopicDetailActivity.this).inflate(R.layout.item_reply_count, parent, false));
                 case TYPE_ITEM:
                     return new ReplyHolder(LayoutInflater.from(TopicDetailActivity.this).inflate(R.layout.item_reply, parent, false));
+                case TYPE_EMPTY:
+                    return new EmptyHolder(LayoutInflater.from(TopicDetailActivity.this).inflate(R.layout.item_empty, parent, false));
                 default:
                     return null;
             }
@@ -212,7 +215,11 @@ public class TopicDetailActivity extends BaseActivity implements MvpView {
         @Override
         public int getItemCount() {
             if (mDetail != null) {
-                return mDetail.getData().getReplies().size() + 1;
+                if (mDetail.getData().getReplies().size() != 0) {
+                    return mDetail.getData().getReplies().size() + 1;
+                } else {
+                    return 2;
+                }
             } else {
                 return 0;
             }
@@ -223,7 +230,11 @@ public class TopicDetailActivity extends BaseActivity implements MvpView {
             if (position == 0) {
                 return TYPE_HEADER;
             } else {
-                return TYPE_ITEM;
+                if (mDetail.getData().getReplies().size() != 0) {
+                    return TYPE_ITEM;
+                } else {
+                    return TYPE_EMPTY;
+                }
             }
         }
     }
@@ -251,6 +262,17 @@ public class TopicDetailActivity extends BaseActivity implements MvpView {
         public ReplyCountHolder(View itemView) {
             super(itemView);
             tv_reply_count = (TextView) itemView.findViewById(R.id.tv_reply_count);
+        }
+    }
+
+    public class EmptyHolder extends RecyclerView.ViewHolder {
+
+        public TextView tv_info;
+
+        public EmptyHolder(View itemView) {
+            super(itemView);
+            tv_info = (TextView) itemView.findViewById(R.id.tv_info);
+            tv_info.setText(getString(R.string.empty_comments));
         }
     }
 }

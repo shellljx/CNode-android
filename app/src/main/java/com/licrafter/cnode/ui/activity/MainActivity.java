@@ -1,4 +1,4 @@
-package com.licrafter.cnode;
+package com.licrafter.cnode.ui.activity;
 
 
 import android.os.Build;
@@ -10,10 +10,12 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
+import com.licrafter.cnode.R;
 import com.licrafter.cnode.base.BaseActivity;
 import com.licrafter.cnode.ui.fragment.CategoryFragment;
 import com.licrafter.cnode.ui.fragment.HomePageFragment;
 import com.licrafter.cnode.ui.fragment.MineFragment;
+import com.licrafter.cnode.ui.fragment.NotificationFragment;
 import com.licrafter.cnode.ui.fragment.TopicListFragment;
 import com.licrafter.cnode.widget.NotScrollViewPager;
 
@@ -35,7 +37,7 @@ public class MainActivity extends BaseActivity {
     @Override
     public void initView() {
         mContentViewPager.setAdapter(new ContentAdapter(getSupportFragmentManager()));
-        mContentViewPager.setOffscreenPageLimit(3);
+        mContentViewPager.setOffscreenPageLimit(4);
     }
 
     @Override
@@ -50,8 +52,11 @@ public class MainActivity extends BaseActivity {
                     case R.id.item_category:
                         mContentViewPager.setCurrentItem(1, false);
                         break;
-                    case R.id.item_mine:
+                    case R.id.item_notification:
                         mContentViewPager.setCurrentItem(2, false);
+                        break;
+                    case R.id.item_mine:
+                        mContentViewPager.setCurrentItem(3, false);
                         break;
                 }
                 return true;
@@ -83,6 +88,8 @@ public class MainActivity extends BaseActivity {
                 case 1:
                     return new CategoryFragment();
                 case 2:
+                    return new NotificationFragment();
+                case 3:
                     return new MineFragment();
                 default:
                     return null;
@@ -91,7 +98,7 @@ public class MainActivity extends BaseActivity {
 
         @Override
         public int getCount() {
-            return 3;
+            return 4;
         }
     }
 }

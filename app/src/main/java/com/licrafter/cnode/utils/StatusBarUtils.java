@@ -11,7 +11,7 @@ import com.licrafter.cnode.base.BaseActivity;
  **/
 public class StatusBarUtils {
 
-    public void initStatusBar(BaseActivity activity) {
+    public static void initStatusBar(BaseActivity activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             WindowManager.LayoutParams localLayoutParams = activity.getWindow().getAttributes();
             localLayoutParams.flags = (WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | localLayoutParams.flags);

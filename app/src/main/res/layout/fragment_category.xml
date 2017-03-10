@@ -16,10 +16,12 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
+
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/status_bar_height"
             app:layout_scrollFlags="scroll|enterAlways|snap"
             app:title="@string/app_name"/>
 
@@ -27,6 +29,7 @@
             android:id="@+id/categoryTabLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingTop="@dimen/status_bar_height"
             app:tabIndicatorColor="@color/white"/>
     </android.support.design.widget.AppBarLayout>
 

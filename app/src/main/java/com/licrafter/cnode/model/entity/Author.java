@@ -25,7 +25,7 @@ public class Author {
     }
 
     public String getAvatar_url() {
-        return avatar_url;
+        return avatar_url.contains("http") | avatar_url.contains("https") ? avatar_url : "https:" + avatar_url;
     }
 
     public void setAvatar_url(String avatar_url) {

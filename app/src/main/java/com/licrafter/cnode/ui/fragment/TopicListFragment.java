@@ -48,7 +48,6 @@ public class TopicListFragment extends BaseFragment implements MvpView {
     private TopicListPresenter mPresenter = new TopicListPresenter();
     private TopicAdapter mAdapter = new TopicAdapter();
     private String mTab;
-    private int mPageIndex;
     private List<Topic> mTopicList = new ArrayList<>();
 
     public static TopicListFragment instance(String tab) {
@@ -76,8 +75,6 @@ public class TopicListFragment extends BaseFragment implements MvpView {
     public void lazyLoad() {
         if (mTopicList.size() == 0) {
             mPresenter.refresh();
-        } else {
-            mPresenter.setPageIndex(mPageIndex);
         }
     }
 
@@ -124,7 +121,6 @@ public class TopicListFragment extends BaseFragment implements MvpView {
 
     @Override
     public void unBind() {
-        mPageIndex = mPresenter.getPageIndex();
         mPresenter.detachView();
     }
 

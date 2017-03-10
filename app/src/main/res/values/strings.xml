@@ -5,6 +5,7 @@
     <string name="title_homePage">首页</string>
     <string name="title_category">分类</string>
     <string name="title_mine">我的</string>
+    <string name="title_notification">消息</string>
     <string name="title_topic_detail">文章详情</string>
 
     <string name="last_reply">最后回复: %s</string>
@@ -13,4 +14,9 @@
     <string name="visit_count">浏览次数: %d</string>
     <string name="tab_name">来自版块: %s</string>
     <string name="reply_count">回复 %d 条</string>
+    <string name="user_score">积分: %d</string>
+    <string name="register_time">社龄: %s</string>
+    <string name="github_name">GitHub: %s</string>
+
+    <string name="empty_comments">文章还没有评论呢，板凳是你的!</string>
 </resources>
