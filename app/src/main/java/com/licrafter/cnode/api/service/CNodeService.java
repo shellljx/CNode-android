@@ -1,10 +1,14 @@
 package com.licrafter.cnode.api.service;
 
+import com.licrafter.cnode.model.LoginBody;
+import com.licrafter.cnode.model.LoginResultModel;
 import com.licrafter.cnode.model.TabModel;
 import com.licrafter.cnode.model.TopicDetailModel;
 import com.licrafter.cnode.model.UserDetailModel;
 
+import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 import rx.Observable;
@@ -59,4 +63,13 @@ public interface CNodeService {
      */
     @GET("user/{userName}")
     Observable<UserDetailModel> getUserDetailByName(@Path("userName") String userName);
+
+    /**
+     * 登录
+     *
+     * @param body
+     * @return
+     */
+    @POST("accesstoken")
+    Observable<LoginResultModel> login(@Body LoginBody body);
 }

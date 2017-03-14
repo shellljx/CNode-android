@@ -8,16 +8,20 @@
     <string name="title_notification">消息</string>
     <string name="title_topic_detail">文章详情</string>
     <string name="title_notification_center">消息中心</string>
+    <string name="title_login">登录</string>
+    <string name="token_message">用户登录后，在设置页面可以看到自己的 accessToken。 建议各移动端应用使用手机扫码的形式获得 Token 登录</string>
+    <string name="title_qr">扫码</string>
 
     <string name="last_reply">最后回复: %s</string>
     <string name="collect">收藏</string>
     <string name="unCollect">取消收藏</string>
     <string name="visit_count">浏览次数: %d</string>
     <string name="tab_name">来自版块: %s</string>
-    <string name="reply_count">回复 %d 条</string>
+    <string name="reply_count">回复 %d 条 上拉查看更多</string>
     <string name="user_score">积分: %d</string>
     <string name="register_time">社龄: %s</string>
     <string name="github_name">GitHub: %s</string>
 
+    <string name="empty_topics">还没有文章呢!</string>
     <string name="empty_comments">文章还没有评论呢，板凳是你的!</string>
 </resources>

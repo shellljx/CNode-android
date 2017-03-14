@@ -21,7 +21,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         setContentView(getContentView());
         StatusBarUtils.initStatusBar(this);
         ButterKnife.bind(this);
-        initView();
+        initView(savedInstanceState);
         setListeners();
         bind();
     }
@@ -39,7 +39,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     public abstract int getContentView();
 
-    public abstract void initView();
+    public abstract void initView(Bundle savedInstanceState);
 
     public abstract void setListeners();
 

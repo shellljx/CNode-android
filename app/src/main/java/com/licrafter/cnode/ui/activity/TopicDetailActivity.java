@@ -1,6 +1,7 @@
 package com.licrafter.cnode.ui.activity;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -75,7 +76,7 @@ public class TopicDetailActivity extends BaseActivity implements MvpView {
     }
 
     @Override
-    public void initView() {
+    public void initView(Bundle savedInstanceState) {
         if (getIntent() != null) {
             mTopicId = getIntent().getStringExtra("topicId");
         }

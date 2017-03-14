@@ -32,6 +32,14 @@ public class UserDetail {
     @Expose
     private List<Topic> recent_topics;
 
+    public List<Topic> getRecent_replies() {
+        return recent_replies;
+    }
+
+    public void setRecent_replies(List<Topic> recent_replies) {
+        this.recent_replies = recent_replies;
+    }
+
     @SerializedName("recent_replies")
     @Expose
     private List<Topic> recent_replies;
