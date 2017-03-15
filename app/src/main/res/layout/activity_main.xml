@@ -9,11 +9,19 @@
     android:orientation="vertical"
     tools:context="com.licrafter.cnode.ui.activity.MainActivity">
 
+    <FrameLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        />
+
     <com.licrafter.cnode.widget.NotScrollViewPager
         android:id="@+id/contentViewPager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        android:visibility="gone"/>
 
     <ImageView
         android:layout_width="match_parent"

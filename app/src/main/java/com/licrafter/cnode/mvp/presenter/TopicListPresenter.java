@@ -24,12 +24,10 @@ public class TopicListPresenter extends BasePresenter<TopicListFragment> {
 
     public void refresh() {
         mPageIndex = 1;
-        android.util.Log.d("ljx","rpageindex = "+mPageIndex);
         getHomePage(mPageIndex, true);
     }
 
     public void loadNextPage() {
-        android.util.Log.d("ljx","pageindex = "+mPageIndex);
         getHomePage(mPageIndex, false);
     }
 

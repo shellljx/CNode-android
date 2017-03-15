@@ -33,7 +33,8 @@
             android:label="@string/title_login"
             android:screenOrientation="portrait"/>
 
-        <activity android:name=".ui.activity.QRActivity"
+        <activity
+            android:name=".ui.activity.QRActivity"
             android:label=""/>
     </application>
 

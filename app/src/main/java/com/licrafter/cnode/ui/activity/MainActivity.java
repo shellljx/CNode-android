@@ -1,23 +1,22 @@
 package com.licrafter.cnode.ui.activity;
 
 
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v7.view.menu.MenuItemImpl;
+import android.view.Menu;
 import android.view.MenuItem;
-import android.view.WindowManager;
 
 import com.licrafter.cnode.R;
 import com.licrafter.cnode.base.BaseActivity;
+import com.licrafter.cnode.base.BaseFragment;
 import com.licrafter.cnode.ui.fragment.CategoryFragment;
 import com.licrafter.cnode.ui.fragment.HomePageFragment;
 import com.licrafter.cnode.ui.fragment.MineFragment;
 import com.licrafter.cnode.ui.fragment.NotificationFragment;
-import com.licrafter.cnode.ui.fragment.TopicListFragment;
+
+import com.licrafter.cnode.utils.FragmentUtils;
 import com.licrafter.cnode.widget.NotScrollViewPager;
 
 import butterknife.BindView;
@@ -29,6 +28,9 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.contentViewPager)
     NotScrollViewPager mContentViewPager;
 
+    private BaseFragment[] mFragments = new BaseFragment[4];
+    private int mCurrPosition;
+
 
     @Override
     public int getContentView() {
@@ -37,8 +39,25 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void initView(Bundle savedInstanceState) {
-        mContentViewPager.setAdapter(new ContentAdapter(getSupportFragmentManager()));
-        mContentViewPager.setOffscreenPageLimit(4);
+
+        if (savedInstanceState == null) {
+            mFragments = new BaseFragment[4];
+            mFragments[0] = HomePageFragment.newInstance();
+            mFragments[1] = CategoryFragment.newInstance();
+            mFragments[2] = NotificationFragment.newInstance();
+            mFragments[3] = MineFragment.newInstance();
+            FragmentUtils.addMultiple(getSupportFragmentManager(), R.id.content, mCurrPosition, mFragments);
+        } else {
+            mCurrPosition = savedInstanceState.getInt("currPosition");
+            mFragments[0] = findFragment(HomePageFragment.class);
+            mFragments[1] = findFragment(CategoryFragment.class);
+            mFragments[2] = findFragment(NotificationFragment.class);
+            mFragments[3] = findFragment(MineFragment.class);
+
+            if (mCurrPosition != 0) {
+                updateNavigationBarState(mCurrPosition);
+            }
+        }
     }
 
     @Override
@@ -46,23 +65,30 @@ public class MainActivity extends BaseActivity {
         mBottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                mCurrPosition = item.getItemId();
                 switch (item.getItemId()) {
                     case R.id.item_home_page:
-                        mContentViewPager.setCurrentItem(0, false);
+                        showHideFragment(0);
                         break;
                     case R.id.item_category:
-                        mContentViewPager.setCurrentItem(1, false);
+                        showHideFragment(1);
                         break;
                     case R.id.item_notification:
-                        mContentViewPager.setCurrentItem(2, false);
+                        showHideFragment(2);
                         break;
                     case R.id.item_mine:
-                        mContentViewPager.setCurrentItem(3, false);
+                        showHideFragment(3);
                         break;
                 }
                 return true;
             }
         });
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("currPosition", mCurrPosition);
     }
 
     @Override
@@ -75,31 +101,22 @@ public class MainActivity extends BaseActivity {
 
     }
 
-    public class ContentAdapter extends FragmentPagerAdapter {
+    private void showHideFragment(int position) {
+        mFragments[position].setUserVisibleHint(true);
+        FragmentUtils.showHideFragment(getSupportFragmentManager(), mFragments[position], null);
+    }
 
-        public ContentAdapter(FragmentManager fm) {
-            super(fm);
-        }
+    private <T extends BaseFragment> T findFragment(Class<T> tClass) {
+        return FragmentUtils.findFragment(getSupportFragmentManager(), tClass);
+    }
 
-        @Override
-        public Fragment getItem(int position) {
-            switch (position) {
-                case 0:
-                    return new HomePageFragment();
-                case 1:
-                    return new CategoryFragment();
-                case 2:
-                    return new NotificationFragment();
-                case 3:
-                    return new MineFragment();
-                default:
-                    return null;
-            }
-        }
-
-        @Override
-        public int getCount() {
-            return 4;
+    private void updateNavigationBarState(int actionId) {
+        Menu menu = mBottomNavigationView.getMenu();
+        for (int i = 0, size = menu.size(); i < size; i++) {
+            MenuItem menuItem = menu.getItem(i);
+            ((MenuItemImpl) menuItem).setExclusiveCheckable(false);
+            menuItem.setChecked(menuItem.getItemId() == actionId);
+            ((MenuItemImpl) menuItem).setExclusiveCheckable(true);
         }
     }
 }

@@ -2,6 +2,8 @@ package com.licrafter.cnode.ui.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -67,6 +69,19 @@ public class MineFragment extends BaseFragment implements MvpView, View.OnClickL
 
     private Adapter mAdapter;
     private UserDetailPresenter mPresenter;
+
+    public static MineFragment newInstance() {
+        MineFragment fragment = new MineFragment();
+        Bundle bundle = new Bundle();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+    }
 
     @Override
     public int setContentView() {
@@ -195,7 +210,7 @@ public class MineFragment extends BaseFragment implements MvpView, View.OnClickL
             }
         }
 
-        public MineTopicListFragment getPage(int position) {
+        MineTopicListFragment getPage(int position) {
             return (MineTopicListFragment) fragmentArray.get(position);
         }
     }

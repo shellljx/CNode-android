@@ -1,5 +1,6 @@
 package com.licrafter.cnode.ui.fragment;
 
+import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -25,6 +26,14 @@ public class CategoryFragment extends BaseFragment {
     ViewPager mCategoryViewPager;
 
     private CategoryAdapter mAdapter;
+
+
+    public static CategoryFragment newInstance() {
+        Bundle bundle = new Bundle();
+        CategoryFragment fragment = new CategoryFragment();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {

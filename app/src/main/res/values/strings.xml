@@ -12,6 +12,7 @@
     <string name="token_message">用户登录后，在设置页面可以看到自己的 accessToken。 建议各移动端应用使用手机扫码的形式获得 Token 登录</string>
     <string name="title_qr">扫码</string>
 
+    <string name="create_topic">新建话题</string>
     <string name="last_reply">最后回复: %s</string>
     <string name="collect">收藏</string>
     <string name="unCollect">取消收藏</string>

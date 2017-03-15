@@ -1,11 +1,6 @@
 package com.licrafter.cnode.ui.fragment;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 
 import com.licrafter.cnode.R;
@@ -17,6 +12,14 @@ import com.licrafter.cnode.utils.FragmentUtils;
  * date 2017/2/27 下午3:12
  **/
 public class HomePageFragment extends BaseFragment {
+
+
+    public static HomePageFragment newInstance() {
+        Bundle bundle = new Bundle();
+        HomePageFragment fragment = new HomePageFragment();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
 
     @Override
     public int setContentView() {
@@ -30,15 +33,13 @@ public class HomePageFragment extends BaseFragment {
 
     @Override
     public void initView(View root) {
-        FragmentUtils.replace(getChildFragmentManager(), R.id.home_page_content, TopicListFragment.instance(null), true, "TopicListFragment");
-        root.findViewById(R.id.home_page_content).post(new Runnable() {
-            @Override
-            public void run() {
-                if (getChildFragmentManager().getFragments() != null) {
-                    getChildFragmentManager().getFragments().get(0).setUserVisibleHint(mVisibleToUser);
-                }
-            }
-        });
+        if (getChildFragmentManager().findFragmentByTag(TopicListFragment.class.getName()) == null) {
+            TopicListFragment fragment = TopicListFragment.instance(null);
+            fragment.setUserVisibleHint(true);
+            FragmentUtils.replace(getChildFragmentManager(), R.id.home_page_content, fragment, false, TopicListFragment.class.getName());
+        } else {
+            FragmentUtils.findFragment(getChildFragmentManager(), TopicListFragment.class).setUserVisibleHint(true);
+        }
     }
 
     @Override
