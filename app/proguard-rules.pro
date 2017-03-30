@@ -76,3 +76,76 @@
 # Don't warn about those in case this app is linking against an older
 # platform version.  We know about them, and they are safe.
 -dontwarn android.support.**
+
+#Retrofit
+-dontnote retrofit2.Platform
+-dontnote retrofit2.Platform$IOS$MainThreadExecutor
+-dontwarn retrofit2.Platform$Java8
+-dontwarn retrofit2.**
+-keep class retrofit2.** { *; }
+-keep interface retrofit2.** { *; }
+-keepattributes Signature
+-keepattributes Exceptions
+-keepclassmembernames interface * {
+    @retrofit2.http.* <methods>;
+}
+
+#RxJava
+-dontwarn rx.**
+-keep class rx.** { *; }
+-keep interface rx.** { *; }
+
+#picasso
+-dontwarn com.squareup.picasso.**
+
+#apache
+-dontwarn org.apache.**
+-keep class org.apache.** { *; }
+-keep interface org.apache.** { *; }
+
+
+#square
+-dontwarn com.square.**
+-keep class com.square.** { *; }
+-keep interface com.square.** { *; }
+
+#Gson
+-dontwarn com.google.gson.**
+-keep class com.google.gson.** { *; }
+-keep interface com.google.gson.** { *; }
+-keepattributes Signature
+-keepattributes *Annotation*
+-keep class sun.misc.Unsafe { *; }
+-keep class com.happytai.elife.model.** { *; }
+
+# Serializable
+-keepnames class * implements java.io.Serializable
+-keepclassmembers class * implements java.io.Serializable {
+    <fields>;
+}
+
+# OkHttp
+-keepattributes *Annotation*
+-keep class okhttp3.** { *; }
+-keep interface okhttp3.** { *; }
+-dontwarn okhttp3.**
+-dontwarn okio.**
+
+# ButterKnife
+# Retain generated class which implement Unbinder.
+-keep public class * implements butterknife.Unbinder { public <init>(**, android.view.View); }
+
+# Prevent obfuscation of types which use ButterKnife annotations since the simple name
+# is used to reflectively look up the generated ViewBinding.
+-keep class butterknife.*
+-keepclasseswithmembernames class * { @butterknife.* <methods>; }
+-keepclasseswithmembernames class * { @butterknife.* <fields>; }
+
+-keepattributes *Annotation*
+-keep public class com.google.vending.licensing.ILicensingService
+-keep public class com.android.vending.licensing.ILicensingService
+
+# ADDED
+-keep class com.google.zxing.client.android.camera.open.**
+#-keep class com.google.zxing.client.android.camera.exposure.**
+-keep class com.google.zxing.client.android.common.executor.**
