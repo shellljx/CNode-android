@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.licrafter.cnode.R;
 import com.licrafter.cnode.base.BaseFragment;
 import com.licrafter.cnode.model.entity.Topic;
+import com.licrafter.cnode.ui.activity.TopicDetailActivity;
 import com.licrafter.cnode.utils.DateUtils;
 import com.licrafter.cnode.utils.ImageLoader;
 import com.licrafter.cnode.utils.TopicDividerDecoration;
@@ -30,7 +31,7 @@ public class MineTopicListFragment extends BaseFragment {
     RecyclerView mRecyclerView;
 
     private List<Topic> mTopicList = new ArrayList<>();
-    private TopicAdapter mAdapter;
+    private TopicAdapter mAdapter = new TopicAdapter();
 
     @Override
     public int setContentView() {
@@ -52,7 +53,6 @@ public class MineTopicListFragment extends BaseFragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.addItemDecoration(new TopicDividerDecoration(getContext()));
-        mAdapter = new TopicAdapter();
         mRecyclerView.setAdapter(mAdapter);
     }
 
@@ -80,11 +80,11 @@ public class MineTopicListFragment extends BaseFragment {
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             switch (viewType) {
                 case TYPE_ITEM:
-                    TopicHolder holder = new TopicHolder(LayoutInflater.from(getContext()).inflate(R.layout.item_topic, parent, false));
+                    final TopicHolder holder = new TopicHolder(LayoutInflater.from(getContext()).inflate(R.layout.item_topic, parent, false));
                     holder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-
+                            TopicDetailActivity.start(getBaseActivity(), mTopicList.get(holder.getAdapterPosition()).getId());
                         }
                     });
                     return holder;

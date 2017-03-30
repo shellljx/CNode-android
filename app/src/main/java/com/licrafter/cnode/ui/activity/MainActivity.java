@@ -14,7 +14,6 @@ import com.licrafter.cnode.base.BaseFragment;
 import com.licrafter.cnode.ui.fragment.CategoryFragment;
 import com.licrafter.cnode.ui.fragment.HomePageFragment;
 import com.licrafter.cnode.ui.fragment.MineFragment;
-import com.licrafter.cnode.ui.fragment.NotificationFragment;
 
 import com.licrafter.cnode.utils.FragmentUtils;
 import com.licrafter.cnode.widget.NotScrollViewPager;
@@ -28,7 +27,7 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.contentViewPager)
     NotScrollViewPager mContentViewPager;
 
-    private BaseFragment[] mFragments = new BaseFragment[4];
+    private BaseFragment[] mFragments = new BaseFragment[3];
     private int mCurrPosition;
 
 
@@ -41,18 +40,16 @@ public class MainActivity extends BaseActivity {
     public void initView(Bundle savedInstanceState) {
 
         if (savedInstanceState == null) {
-            mFragments = new BaseFragment[4];
+            mFragments = new BaseFragment[3];
             mFragments[0] = HomePageFragment.newInstance();
             mFragments[1] = CategoryFragment.newInstance();
-            mFragments[2] = NotificationFragment.newInstance();
-            mFragments[3] = MineFragment.newInstance();
+            mFragments[2] = MineFragment.newInstance();
             FragmentUtils.addMultiple(getSupportFragmentManager(), R.id.content, mCurrPosition, mFragments);
         } else {
             mCurrPosition = savedInstanceState.getInt("currPosition");
             mFragments[0] = findFragment(HomePageFragment.class);
             mFragments[1] = findFragment(CategoryFragment.class);
-            mFragments[2] = findFragment(NotificationFragment.class);
-            mFragments[3] = findFragment(MineFragment.class);
+            mFragments[2] = findFragment(MineFragment.class);
 
             if (mCurrPosition != 0) {
                 updateNavigationBarState(mCurrPosition);
@@ -73,11 +70,8 @@ public class MainActivity extends BaseActivity {
                     case R.id.item_category:
                         showHideFragment(1);
                         break;
-                    case R.id.item_notification:
-                        showHideFragment(2);
-                        break;
                     case R.id.item_mine:
-                        showHideFragment(3);
+                        showHideFragment(2);
                         break;
                 }
                 return true;

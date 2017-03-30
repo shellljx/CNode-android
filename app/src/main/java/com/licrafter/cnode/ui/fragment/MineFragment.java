@@ -20,13 +20,18 @@ import android.widget.TextView;
 import com.licrafter.cnode.R;
 import com.licrafter.cnode.base.BaseFragment;
 import com.licrafter.cnode.cache.UserCache;
+import com.licrafter.cnode.model.UnReadCountModel;
 import com.licrafter.cnode.model.UserDetailModel;
 import com.licrafter.cnode.mvp.presenter.UserDetailPresenter;
 import com.licrafter.cnode.mvp.view.MvpView;
 import com.licrafter.cnode.ui.activity.LoginActivity;
+import com.licrafter.cnode.ui.activity.NotificationCenterActivity;
 import com.licrafter.cnode.utils.DateUtils;
 import com.licrafter.cnode.utils.ImageLoader;
 import com.makeramen.roundedimageview.RoundedImageView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 
@@ -61,6 +66,10 @@ public class MineFragment extends BaseFragment implements MvpView, View.OnClickL
     TextView mTitle;
     @BindView(R.id.btn_settings)
     ImageButton mSettingsBtn;
+    @BindView(R.id.btn_notification)
+    ImageButton mNotificationBtn;
+    @BindView(R.id.tv_dot)
+    TextView mDot;
 
     @BindView(R.id.tabLayout)
     TabLayout mTabLayout;
@@ -103,6 +112,7 @@ public class MineFragment extends BaseFragment implements MvpView, View.OnClickL
     public void setListeners() {
         mLoginView.setOnClickListener(this);
         mSettingsBtn.setOnClickListener(this);
+        mNotificationBtn.setOnClickListener(this);
 
         mAppbar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
@@ -123,6 +133,7 @@ public class MineFragment extends BaseFragment implements MvpView, View.OnClickL
         mPresenter = new UserDetailPresenter();
         mPresenter.attachView(this);
         refreshUserProfit();
+        mPresenter.getUnReadCount();
     }
 
     private void refreshUserProfit() {
@@ -167,6 +178,13 @@ public class MineFragment extends BaseFragment implements MvpView, View.OnClickL
             case R.id.btn_settings:
                 UserCache.clear();
                 break;
+            case R.id.btn_notification:
+                if (UserCache.getUserName() == null) {
+                    startActivityForResult(new Intent(getActivity(), LoginActivity.class), REQ_LOGIN);
+                } else {
+                    startActivity(new Intent(getActivity(), NotificationCenterActivity.class));
+                }
+                break;
         }
     }
 
@@ -175,6 +193,15 @@ public class MineFragment extends BaseFragment implements MvpView, View.OnClickL
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQ_LOGIN && resultCode == Activity.RESULT_OK) {
             refreshUserProfit();
+        }
+    }
+
+    public void notifyUnReadCount(UnReadCountModel model) {
+        if (model.getData() != 0) {
+            mDot.setVisibility(View.VISIBLE);
+            mDot.setText(model.getData());
+        } else {
+            mDot.setVisibility(View.GONE);
         }
     }
 

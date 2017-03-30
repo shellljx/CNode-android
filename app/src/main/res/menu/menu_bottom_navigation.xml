@@ -9,10 +9,6 @@
         android:icon="@mipmap/ic_tab_category"
         android:title="@string/title_category"/>
     <item
-        android:id="@+id/item_notification"
-        android:icon="@mipmap/ic_tab_notification"
-        android:title="@string/title_notification"/>
-    <item
         android:id="@+id/item_mine"
         android:icon="@mipmap/ic_tab_mine"
         android:title="@string/title_mine"/>

@@ -1,6 +1,8 @@
 package com.licrafter.cnode.mvp.presenter;
 
 import com.licrafter.cnode.api.CNodeApi;
+import com.licrafter.cnode.cache.UserCache;
+import com.licrafter.cnode.model.UnReadCountModel;
 import com.licrafter.cnode.model.UserDetailModel;
 import com.licrafter.cnode.ui.fragment.MineFragment;
 
@@ -15,7 +17,7 @@ import rx.schedulers.Schedulers;
 public class UserDetailPresenter extends BasePresenter<MineFragment> {
 
     public void getUserDetail(String userName) {
-        CNodeApi.getInstance().getService().getUserDetailByName(userName)
+        mCompositeSubscription.add(CNodeApi.getInstance().getService().getUserDetailByName(userName)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<UserDetailModel>() {
@@ -33,6 +35,31 @@ public class UserDetailPresenter extends BasePresenter<MineFragment> {
                     public void onNext(UserDetailModel userDetailModel) {
                         getView().notifyGetUserSuccess(userDetailModel);
                     }
-                });
+                }));
+    }
+
+    public void getUnReadCount() {
+        if (UserCache.getUserToken() == null) {
+            return;
+        }
+        mCompositeSubscription.add(CNodeApi.getInstance().getService().getUnReadCount(UserCache.getUserToken())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<UnReadCountModel>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(UnReadCountModel model) {
+                        getView().notifyUnReadCount(model);
+                    }
+                }));
     }
 }

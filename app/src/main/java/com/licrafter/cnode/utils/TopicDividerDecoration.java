@@ -37,7 +37,7 @@ public class TopicDividerDecoration extends RecyclerView.ItemDecoration {
         int left = parent.getPaddingLeft();
         int right = parent.getWidth() - parent.getPaddingRight();
 
-        for (int i = 0; i < childCount - 1; i++) {
+        for (int i = 0; i < childCount-1; i++) {
             View view = parent.getChildAt(i);
             float top = view.getBottom();
             float bottom = view.getBottom() + dividerHeight;

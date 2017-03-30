@@ -4,6 +4,7 @@ import com.licrafter.cnode.model.LoginBody;
 import com.licrafter.cnode.model.LoginResultModel;
 import com.licrafter.cnode.model.TabModel;
 import com.licrafter.cnode.model.TopicDetailModel;
+import com.licrafter.cnode.model.UnReadCountModel;
 import com.licrafter.cnode.model.UserDetailModel;
 
 import retrofit2.http.Body;
@@ -72,4 +73,13 @@ public interface CNodeService {
      */
     @POST("accesstoken")
     Observable<LoginResultModel> login(@Body LoginBody body);
+
+    /**
+     * 获取未读消息数
+     *
+     * @param accesstoken
+     * @return
+     */
+    @POST("message/count")
+    Observable<UnReadCountModel> getUnReadCount(@Body String accesstoken);
 }

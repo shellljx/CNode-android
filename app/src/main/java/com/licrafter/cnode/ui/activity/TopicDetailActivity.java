@@ -82,8 +82,10 @@ public class TopicDetailActivity extends BaseActivity implements MvpView {
         }
         mMaxScroll = DipConvertUtils.dip2px(this, 150);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle(R.string.title_topic_detail);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar()!=null){
+            getSupportActionBar().setTitle(R.string.title_topic_detail);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         SwipeRefreshUtils.initStyle(mRefreshLayout);
         mAdapter = new DetailAdapter();
         mDetailRecyclerView.setLayoutManager(new LinearLayoutManager(this));

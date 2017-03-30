@@ -54,6 +54,32 @@
                         android:layout_alignParentRight="true"
                         android:background="@android:color/transparent"
                         android:src="@mipmap/ic_settings"/>
+
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="20dp"
+                        android:layout_toLeftOf="@id/btn_settings">
+
+                        <ImageButton
+                            android:id="@+id/btn_notification"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@android:color/transparent"
+                            android:src="@mipmap/ic_notification"/>
+
+                        <TextView
+                            android:id="@+id/tv_dot"
+                            android:visibility="gone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right"
+                            android:background="@drawable/bg_red_dot"
+                            android:padding="2dp"
+                            android:text="51"
+                            android:textColor="@color/white"
+                            android:textSize="7dp"/>
+                    </FrameLayout>
                 </RelativeLayout>
             </android.support.v7.widget.Toolbar>
 

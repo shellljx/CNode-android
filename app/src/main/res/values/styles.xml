@@ -9,4 +9,7 @@
         <item name="android:windowBackground">@color/window_background</item>
     </style>
 
+    <style name="WelcomeTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowBackground">@color/white</item>
+    </style>
 </resources>
