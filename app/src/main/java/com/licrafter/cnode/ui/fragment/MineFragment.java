@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.SparseArray;
 import android.view.View;
@@ -28,10 +29,8 @@ import com.licrafter.cnode.ui.activity.LoginActivity;
 import com.licrafter.cnode.ui.activity.NotificationCenterActivity;
 import com.licrafter.cnode.utils.DateUtils;
 import com.licrafter.cnode.utils.ImageLoader;
+import com.licrafter.cnode.utils.SwipeRefreshUtils;
 import com.makeramen.roundedimageview.RoundedImageView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 
@@ -47,6 +46,8 @@ public class MineFragment extends BaseFragment implements MvpView, View.OnClickL
     Toolbar mToolbar;
     @BindView(R.id.appbar)
     AppBarLayout mAppbar;
+    @BindView(R.id.refreshLayout)
+    SwipeRefreshLayout mRefreshLayout;
 
     @BindView(R.id.iv_avatar)
     RoundedImageView mAvatarView;
@@ -104,6 +105,7 @@ public class MineFragment extends BaseFragment implements MvpView, View.OnClickL
     @Override
     public void initView(View root) {
         mAdapter = new Adapter(getChildFragmentManager());
+        SwipeRefreshUtils.initStyle(mRefreshLayout);
         mViewPager.setAdapter(mAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
     }
@@ -113,6 +115,13 @@ public class MineFragment extends BaseFragment implements MvpView, View.OnClickL
         mLoginView.setOnClickListener(this);
         mSettingsBtn.setOnClickListener(this);
         mNotificationBtn.setOnClickListener(this);
+        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshUserProfit();
+                mPresenter.getUnReadCount();
+            }
+        });
 
         mAppbar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
@@ -121,6 +130,12 @@ public class MineFragment extends BaseFragment implements MvpView, View.OnClickL
                     mProfitLayout.setVisibility(View.INVISIBLE);
                 } else if (mProfitLayout.getVisibility() != View.VISIBLE) {
                     mProfitLayout.setVisibility(View.VISIBLE);
+                }
+                if (Math.abs(verticalOffset) == 0) {
+                    mRefreshLayout.setEnabled(true);
+                } else if (mRefreshLayout.isEnabled()) {
+                    mRefreshLayout.setRefreshing(false);
+                    mRefreshLayout.setEnabled(false);
                 }
                 float alpha = (float) Math.abs(verticalOffset) / appBarLayout.getTotalScrollRange();
                 mTitle.setAlpha(alpha);
@@ -155,6 +170,7 @@ public class MineFragment extends BaseFragment implements MvpView, View.OnClickL
     }
 
     public void notifyGetUserSuccess(UserDetailModel model) {
+        mRefreshLayout.setRefreshing(false);
         ImageLoader.loadUrl(mAvatarView, model.getData().getAvatar_url());
         mUserNameView.setText(model.getData().getLoginname());
         mGithubView.setText(String.format(getString(R.string.github_name), model.getData().getGithubUsername()));
@@ -166,7 +182,7 @@ public class MineFragment extends BaseFragment implements MvpView, View.OnClickL
 
     @Override
     public void onFailed() {
-
+        mRefreshLayout.setRefreshing(false);
     }
 
     @Override
@@ -197,6 +213,7 @@ public class MineFragment extends BaseFragment implements MvpView, View.OnClickL
     }
 
     public void notifyUnReadCount(UnReadCountModel model) {
+        mRefreshLayout.setRefreshing(false);
         if (model.getData() != 0) {
             mDot.setVisibility(View.VISIBLE);
             mDot.setText(model.getData());
@@ -207,7 +224,7 @@ public class MineFragment extends BaseFragment implements MvpView, View.OnClickL
 
     public class Adapter extends FragmentPagerAdapter {
 
-        private SparseArray fragmentArray = new SparseArray();
+        private SparseArray<MineTopicListFragment> fragmentArray = new SparseArray<>();
 
         Adapter(FragmentManager fm) {
             super(fm);
@@ -217,7 +234,7 @@ public class MineFragment extends BaseFragment implements MvpView, View.OnClickL
 
         @Override
         public Fragment getItem(int position) {
-            return (MineTopicListFragment) fragmentArray.get(position);
+            return fragmentArray.get(position);
         }
 
         @Override
@@ -238,7 +255,7 @@ public class MineFragment extends BaseFragment implements MvpView, View.OnClickL
         }
 
         MineTopicListFragment getPage(int position) {
-            return (MineTopicListFragment) fragmentArray.get(position);
+            return fragmentArray.get(position);
         }
     }
 }

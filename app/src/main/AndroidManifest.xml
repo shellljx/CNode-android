@@ -47,6 +47,12 @@
             android:name=".ui.activity.NotificationCenterActivity"
             android:label="@string/title_notification_center"
             android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".ui.activity.TopicCreateActivity"
+            android:label="@string/title_topic_create"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateVisible"/>
     </application>
 
 </manifest>

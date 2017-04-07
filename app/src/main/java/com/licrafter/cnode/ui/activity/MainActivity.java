@@ -97,7 +97,7 @@ public class MainActivity extends BaseActivity {
 
     private void showHideFragment(int position) {
         mFragments[position].setUserVisibleHint(true);
-        FragmentUtils.showHideFragment(getSupportFragmentManager(), mFragments[position], null);
+        FragmentUtils.showHideFragment(getSupportFragmentManager(), mFragments[position], null,false,false);
     }
 
     private <T extends BaseFragment> T findFragment(Class<T> tClass) {

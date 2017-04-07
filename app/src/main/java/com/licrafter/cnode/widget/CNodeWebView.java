@@ -2,9 +2,7 @@ package com.licrafter.cnode.widget;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.os.Build;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -32,6 +30,7 @@ public class CNodeWebView extends WebView {
 
     @SuppressLint("JavascriptInterface")
     private void initWebView() {
+        setHorizontalScrollBarEnabled(false);
         this.setWebViewClient(webViewClient);
         WebSettings webSettings = getSettings();
         webSettings.setDisplayZoomControls(false);
@@ -76,16 +75,6 @@ public class CNodeWebView extends WebView {
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-//            if (url.contains(".jpg")||url.contains(".png")||url.contains(".gif")||url.contains(".jpeg")) {
-//                if (url.contains("file://")){
-//                    url = url.substring(6,url.length());
-//                }
-//            } else if (url.contains("www.v2ex.com")) {
-//                view.loadUrl(url);
-//            } else {
-//                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-//                getContext().startActivity(intent);
-//            }
             view.loadUrl(url);
             return true;
         }

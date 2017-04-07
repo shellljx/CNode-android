@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/font_blod"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/bg_operator_clicked"
+        android:clickable="true"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:src="@mipmap/ic_font_blod"/>
+
+    <ImageView
+        android:id="@+id/font_italic"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/bg_operator_clicked"
+        android:clickable="true"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:src="@mipmap/ic_font_italic"/>
+
+    <ImageView
+        android:id="@+id/quote"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/bg_operator_clicked"
+        android:clickable="true"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:src="@mipmap/ic_quote"/>
+
+    <ImageView
+        android:id="@+id/list_ul"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/bg_operator_clicked"
+        android:clickable="true"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:src="@mipmap/ic_ul"/>
+
+    <ImageView
+        android:id="@+id/list_ol"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/bg_operator_clicked"
+        android:clickable="true"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:src="@mipmap/ic_ol"/>
+
+    <ImageView
+        android:id="@+id/op_link"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/bg_operator_clicked"
+        android:clickable="true"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:src="@mipmap/ic_link"/>
+
+    <ImageView
+        android:id="@+id/op_image"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/bg_operator_clicked"
+        android:clickable="true"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:src="@mipmap/ic_image"/>
+
+    <ImageView
+        android:id="@+id/md_info"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/bg_operator_clicked"
+        android:clickable="true"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:src="@mipmap/ic_more_infomation"/>
+
+    <ImageView
+        android:id="@+id/op_code"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/bg_operator_clicked"
+        android:clickable="true"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:src="@mipmap/ic_code"/>
+
+    <ImageView
+        android:id="@+id/op_preview"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/bg_operator_clicked"
+        android:clickable="true"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:src="@mipmap/ic_preview"/>
+
+</LinearLayout>

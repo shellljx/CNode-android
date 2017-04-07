@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="categories">
+        <item>分享</item>
+        <item>问答</item>
+        <item>招聘</item>
+    </array>
+</resources>

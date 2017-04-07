@@ -1,11 +1,16 @@
 package com.licrafter.cnode.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageButton;
 
 import com.licrafter.cnode.R;
 import com.licrafter.cnode.base.BaseFragment;
+import com.licrafter.cnode.ui.activity.TopicCreateActivity;
 import com.licrafter.cnode.utils.FragmentUtils;
+
+import butterknife.BindView;
 
 /**
  * author: shell
@@ -13,6 +18,8 @@ import com.licrafter.cnode.utils.FragmentUtils;
  **/
 public class HomePageFragment extends BaseFragment {
 
+    @BindView(R.id.btn_create_topic)
+    ImageButton mBtnCreate;
 
     public static HomePageFragment newInstance() {
         Bundle bundle = new Bundle();
@@ -44,7 +51,12 @@ public class HomePageFragment extends BaseFragment {
 
     @Override
     public void setListeners() {
-
+        mBtnCreate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getBaseActivity(), TopicCreateActivity.class));
+            }
+        });
     }
 
     @Override

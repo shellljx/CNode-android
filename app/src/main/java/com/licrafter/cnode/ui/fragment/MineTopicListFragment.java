@@ -44,12 +44,14 @@ public class MineTopicListFragment extends BaseFragment {
     }
 
     public void refresh(List<Topic> topics) {
+        mTopicList.clear();
         mTopicList.addAll(topics);
         mAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void initView(View root) {
+        setRetainInstance(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.addItemDecoration(new TopicDividerDecoration(getContext()));

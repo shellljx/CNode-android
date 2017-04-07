@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
+import com.licrafter.cnode.R;
 import com.licrafter.cnode.base.BaseFragment;
 
 import java.util.List;
@@ -30,7 +31,7 @@ public class FragmentUtils {
         transaction.add(containerId, fragment, tag).commitAllowingStateLoss();
     }
 
-    public static void addMultiple(FragmentManager manager, int containerId, int showPosition, Fragment[] fragments) {
+    public static void addMultiple(FragmentManager manager, int containerId, int showPosition, BaseFragment... fragments) {
         FragmentTransaction transaction = manager.beginTransaction();
         for (int i = 0; i < fragments.length; i++) {
             String tag = fragments[i].getClass().getName();
@@ -43,8 +44,13 @@ public class FragmentUtils {
         transaction.commit();
     }
 
-    public static void showHideFragment(FragmentManager manager, Fragment show, Fragment hide) {
+    public static void showHideFragment(FragmentManager manager, Fragment show, Fragment hide, boolean animation, boolean backStack) {
         FragmentTransaction transaction = manager.beginTransaction();
+        if (animation) {
+            transaction.setCustomAnimations(
+                    R.anim.fragment_translate_in, R.anim.fragment_translate_out
+            ,R.anim.fragment_pop_in,R.anim.fragment_pop_out);
+        }
         transaction.show(show);
         if (hide == null) {
             List<Fragment> fragments = manager.getFragments();
@@ -57,6 +63,9 @@ public class FragmentUtils {
             }
         } else {
             transaction.hide(hide);
+        }
+        if (backStack) {
+            transaction.addToBackStack("showHideFragment");
         }
         transaction.commit();
     }

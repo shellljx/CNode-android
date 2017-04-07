@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/input_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#00000000"
+        android:gravity="top"
+        android:hint="标题"
+        android:imeActionId="@+id/login"
+        android:inputType="text"
+        android:maxLines="1"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:scrollHorizontally="false"
+        android:textColor="#111"
+        android:textSize="@dimen/text_size_large"/>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="0.3dp"
+        android:background="#B6B6B6"/>
+
+    <EditText
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/input_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#00000000"
+        android:gravity="top"
+        android:hint="内容"
+        android:inputType="textMultiLine|textLongMessage"
+        android:minHeight="200dp"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:scrollHorizontally="false"
+        android:textColor="#333"
+        android:textSize="@dimen/text_size_large"/>
+</LinearLayout>
