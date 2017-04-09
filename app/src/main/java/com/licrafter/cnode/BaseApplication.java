@@ -2,7 +2,13 @@ package com.licrafter.cnode;
 
 import android.app.Application;
 import android.content.Context;
+
+import com.bilibili.boxing.BoxingCrop;
+import com.bilibili.boxing.BoxingMediaLoader;
+import com.bilibili.boxing.loader.IBoxingMediaLoader;
 import com.licrafter.cnode.utils.SharedPreferenceUtils;
+import com.licrafter.cnode.widget.BoxingPicassoLoader;
+import com.licrafter.cnode.widget.BoxingUcrop;
 
 /**
  * author: shell
@@ -17,6 +23,9 @@ public class BaseApplication extends Application {
         super.onCreate();
         mContext = getApplicationContext();
         SharedPreferenceUtils.init(this);
+        IBoxingMediaLoader loader = new BoxingPicassoLoader();
+        BoxingMediaLoader.getInstance().init(loader);
+        BoxingCrop.getInstance().init(new BoxingUcrop());
     }
 
     public static Context getContext() {
