@@ -1,6 +1,5 @@
 package com.licrafter.cnode.ui.activity;
 
-import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
@@ -19,20 +18,11 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 
-import com.bilibili.boxing.Boxing;
-import com.bilibili.boxing.model.config.BoxingConfig;
-import com.bilibili.boxing.model.entity.BaseMedia;
-import com.bilibili.boxing.model.entity.impl.ImageMedia;
-import com.bilibili.boxing.utils.ImageCompressor;
-import com.bilibili.boxing_impl.ui.BoxingActivity;
 import com.licrafter.cnode.R;
 import com.licrafter.cnode.base.BaseActivity;
 import com.licrafter.cnode.ui.fragment.MdEditFragment;
 import com.licrafter.cnode.ui.fragment.MdPreviewFragment;
 import com.licrafter.cnode.utils.FragmentUtils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 
@@ -41,9 +31,6 @@ import butterknife.BindView;
  * date 2017/4/3 下午9:56
  **/
 public class TopicCreateActivity extends BaseActivity implements View.OnClickListener {
-
-    private static final int REQUEST_CODE = 1024;
-    private static final int COMPRESS_REQUEST_CODE = 2048;
 
     @BindView(R.id.inputLayout)
     ScrollView mInputLayout;
@@ -160,9 +147,6 @@ public class TopicCreateActivity extends BaseActivity implements View.OnClickLis
                 insertLink();
                 break;
             case R.id.op_image:
-                BoxingConfig singleImgConfig = new BoxingConfig(BoxingConfig.Mode.SINGLE_IMG);
-                singleImgConfig.needCamera();
-                Boxing.of(singleImgConfig).withIntent(this, BoxingActivity.class).start(this, COMPRESS_REQUEST_CODE);
                 break;
             case R.id.op_preview:
                 if (mEditFragment != null && mPreviewFragment != null) {
@@ -223,18 +207,5 @@ public class TopicCreateActivity extends BaseActivity implements View.OnClickLis
 
         dialog.show();
 
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-
-            final ArrayList<BaseMedia> medias = Boxing.getResult(data);
-            if (requestCode == REQUEST_CODE) {
-            } else if (requestCode == COMPRESS_REQUEST_CODE) {
-                android.util.Log.d("ljx", "path = " + medias.get(0).getPath());
-            }
-        }
     }
 }
