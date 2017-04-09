@@ -139,7 +139,7 @@ public class TopicListFragment extends BaseFragment implements MvpView {
         mAdapter.notifyDataSetChanged();
     }
 
-    public class TopicAdapter extends RecyclerView.Adapter {
+    private class TopicAdapter extends RecyclerView.Adapter {
         private int TYPE_ITEM = 0x001;
         private int TYPE_FOOTER = 0x002;
 
@@ -176,8 +176,8 @@ public class TopicListFragment extends BaseFragment implements MvpView {
                 topicHolder.tagNormal.setVisibility((topic.isGood() || topic.isTop()) ? View.GONE : View.VISIBLE);
                 topicHolder.title.setText(topic.getTitle());
                 topicHolder.lastReply.setText(String.format(getString(R.string.last_reply), DateUtils.format(topic.getLast_reply_at())));
-                topicHolder.replyCount.setText(topic.getReply_count() + "");
-                topicHolder.visitCount.setText(topic.getVisit_count() + "");
+                topicHolder.replyCount.setText(String.valueOf(topic.getReply_count()));
+                topicHolder.visitCount.setText(String.valueOf(topic.getVisit_count()));
             } else if (holder instanceof FooterHolder) {
                 ((FooterHolder) holder).footerInfo.setText(mPresenter.hasNextPage() ? "加载中..." : "已加载全部内容!");
             }
@@ -216,7 +216,7 @@ public class TopicListFragment extends BaseFragment implements MvpView {
         @BindView(R.id.tv_visit_count)
         TextView visitCount;
 
-        public TopicHolder(View itemView) {
+        private TopicHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
@@ -227,7 +227,7 @@ public class TopicListFragment extends BaseFragment implements MvpView {
         @BindView(R.id.footerInfo)
         TextView footerInfo;
 
-        public FooterHolder(View itemView) {
+        private FooterHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }

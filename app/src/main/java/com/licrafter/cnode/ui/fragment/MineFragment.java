@@ -222,7 +222,7 @@ public class MineFragment extends BaseFragment implements MvpView, View.OnClickL
         }
     }
 
-    public class Adapter extends FragmentPagerAdapter {
+    private class Adapter extends FragmentPagerAdapter {
 
         private SparseArray<MineTopicListFragment> fragmentArray = new SparseArray<>();
 

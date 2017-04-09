@@ -75,11 +75,11 @@ public class CategoryFragment extends BaseFragment {
 
     }
 
-    public class CategoryAdapter extends FragmentPagerAdapter {
+    private class CategoryAdapter extends FragmentPagerAdapter {
 
         private Fragment primaryFragment;
 
-        public CategoryAdapter(FragmentManager fm) {
+        private CategoryAdapter(FragmentManager fm) {
             super(fm);
         }
 
@@ -122,7 +122,7 @@ public class CategoryFragment extends BaseFragment {
             }
         }
 
-        public void setPrimaryFragmentUserHint(boolean userHint) {
+        private void setPrimaryFragmentUserHint(boolean userHint) {
             if (primaryFragment != null) {
                 primaryFragment.setUserVisibleHint(userHint);
             }

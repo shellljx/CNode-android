@@ -26,4 +26,7 @@
 
     <string name="empty_topics">还没有文章呢!</string>
     <string name="empty_comments">文章还没有评论呢，板凳是你的!</string>
+    <string name="all_photo">所有图片</string>
+    <string name="ok">确定</string>
+    <string name="preview">预览</string>
 </resources>

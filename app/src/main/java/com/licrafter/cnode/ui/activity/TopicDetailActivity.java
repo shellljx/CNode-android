@@ -23,7 +23,6 @@ import com.licrafter.cnode.model.entity.TopicDetail;
 import com.licrafter.cnode.mvp.presenter.TopicDetailPresenter;
 import com.licrafter.cnode.mvp.view.MvpView;
 import com.licrafter.cnode.utils.DateUtils;
-import com.licrafter.cnode.utils.DipConvertUtils;
 import com.licrafter.cnode.utils.ImageLoader;
 import com.licrafter.cnode.utils.SwipeRefreshUtils;
 import com.licrafter.cnode.widget.CNodeWebView;
@@ -67,8 +66,6 @@ public class TopicDetailActivity extends BaseActivity implements MvpView {
     private DetailAdapter mAdapter;
     private TopicDetailModel mDetail;
     private String mTopicId;
-    private int mScrolledY;
-    private int mMaxScroll;
 
     @Override
     public int getContentView() {
@@ -80,9 +77,8 @@ public class TopicDetailActivity extends BaseActivity implements MvpView {
         if (getIntent() != null) {
             mTopicId = getIntent().getStringExtra("topicId");
         }
-        mMaxScroll = DipConvertUtils.dip2px(this, 150);
         setSupportActionBar(mToolbar);
-        if (getSupportActionBar()!=null){
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(R.string.title_topic_detail);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
@@ -181,7 +177,7 @@ public class TopicDetailActivity extends BaseActivity implements MvpView {
         tv_tab.setText(String.format(getString(R.string.tab_name), detail.getTab()));
     }
 
-    public class DetailAdapter extends RecyclerView.Adapter {
+    private class DetailAdapter extends RecyclerView.Adapter {
 
         private static final int TYPE_HEADER = 0x001;
         private static final int TYPE_ITEM = 0x002;
@@ -242,14 +238,14 @@ public class TopicDetailActivity extends BaseActivity implements MvpView {
         }
     }
 
-    public class ReplyHolder extends RecyclerView.ViewHolder {
+    private class ReplyHolder extends RecyclerView.ViewHolder {
 
         public RoundedImageView iv_avatar;
         public TextView tv_user_name;
-        public TextView tv_created_at;
-        public RichTextView tv_content;
+        TextView tv_created_at;
+        RichTextView tv_content;
 
-        public ReplyHolder(View itemView) {
+        ReplyHolder(View itemView) {
             super(itemView);
             iv_avatar = (RoundedImageView) itemView.findViewById(R.id.iv_avatar);
             tv_user_name = (TextView) itemView.findViewById(R.id.tv_user_name);
@@ -258,21 +254,21 @@ public class TopicDetailActivity extends BaseActivity implements MvpView {
         }
     }
 
-    public class ReplyCountHolder extends RecyclerView.ViewHolder {
+    private class ReplyCountHolder extends RecyclerView.ViewHolder {
 
-        public TextView tv_reply_count;
+        TextView tv_reply_count;
 
-        public ReplyCountHolder(View itemView) {
+        ReplyCountHolder(View itemView) {
             super(itemView);
             tv_reply_count = (TextView) itemView.findViewById(R.id.tv_reply_count);
         }
     }
 
-    public class EmptyHolder extends RecyclerView.ViewHolder {
+    private class EmptyHolder extends RecyclerView.ViewHolder {
 
-        public TextView tv_info;
+        TextView tv_info;
 
-        public EmptyHolder(View itemView) {
+        EmptyHolder(View itemView) {
             super(itemView);
             tv_info = (TextView) itemView.findViewById(R.id.tv_info);
             tv_info.setText(getString(R.string.empty_comments));

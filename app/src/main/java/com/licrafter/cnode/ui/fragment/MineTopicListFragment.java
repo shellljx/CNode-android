@@ -120,7 +120,7 @@ public class MineTopicListFragment extends BaseFragment {
         }
     }
 
-    public class TopicHolder extends RecyclerView.ViewHolder {
+    private class TopicHolder extends RecyclerView.ViewHolder {
 
         public RoundedImageView iv_avatar;
         TextView tv_title;
@@ -137,7 +137,7 @@ public class MineTopicListFragment extends BaseFragment {
         }
     }
 
-    public class EmptyHolder extends RecyclerView.ViewHolder {
+    private class EmptyHolder extends RecyclerView.ViewHolder {
         TextView tv_info;
 
         EmptyHolder(View itemView) {
