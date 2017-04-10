@@ -17,7 +17,7 @@ import rx.schedulers.Schedulers;
 public class UserDetailPresenter extends BasePresenter<MineFragment> {
 
     public void getUserDetail(String userName) {
-        mCompositeSubscription.add(CNodeApi.getInstance().getService().getUserDetailByName(userName)
+        mCompositeSubscription.add(CNodeApi.getCNodeService().getUserDetailByName(userName)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<UserDetailModel>() {
@@ -42,7 +42,7 @@ public class UserDetailPresenter extends BasePresenter<MineFragment> {
         if (UserCache.getUserToken() == null) {
             return;
         }
-        mCompositeSubscription.add(CNodeApi.getInstance().getService().getUnReadCount(UserCache.getUserToken())
+        mCompositeSubscription.add(CNodeApi.getCNodeService().getUnReadCount(UserCache.getUserToken())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<UnReadCountModel>() {

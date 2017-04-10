@@ -20,7 +20,7 @@ public class LoginPresenter extends BasePresenter<LoginActivity> {
         LoginBody body = new LoginBody();
         body.setAccesstoken(token);
 
-        mCompositeSubscription.add(CNodeApi.getInstance().getService().login(body)
+        mCompositeSubscription.add(CNodeApi.getCNodeService().login(body)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<LoginResultModel>() {

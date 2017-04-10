@@ -1,9 +1,15 @@
 package com.licrafter.cnode.ui.activity;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Rect;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -14,24 +20,34 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVFile;
+import com.avos.avoscloud.ProgressCallback;
+import com.avos.avoscloud.SaveCallback;
 import com.bilibili.boxing.Boxing;
 import com.bilibili.boxing.model.config.BoxingConfig;
 import com.bilibili.boxing.model.entity.BaseMedia;
 import com.bilibili.boxing.model.entity.impl.ImageMedia;
-import com.bilibili.boxing.utils.ImageCompressor;
 import com.licrafter.cnode.R;
 import com.licrafter.cnode.base.BaseActivity;
+import com.licrafter.cnode.cache.UserCache;
+import com.licrafter.cnode.mvp.presenter.TopicCreatePresenter;
+import com.licrafter.cnode.mvp.view.MvpView;
 import com.licrafter.cnode.ui.fragment.MdEditFragment;
 import com.licrafter.cnode.ui.fragment.MdPreviewFragment;
+import com.licrafter.cnode.utils.BitmapCompressUtil;
 import com.licrafter.cnode.utils.FragmentUtils;
+import com.licrafter.cnode.widget.HorizontalOperatorView;
+import com.licrafter.cnode.widget.dialog.InsertLinkDialog;
+import com.licrafter.cnode.widget.dialog.UploadingDialog;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.List;
 
 import boxing_impl.ui.BoxingActivity;
 import butterknife.BindView;
@@ -40,10 +56,13 @@ import butterknife.BindView;
  * author: shell
  * date 2017/4/3 下午9:56
  **/
-public class TopicCreateActivity extends BaseActivity implements View.OnClickListener {
+public class TopicCreateActivity extends BaseActivity implements HorizontalOperatorView.OperationListener, MvpView {
+
+    private static String[] PHOTO_PERMISSIONS = {Manifest.permission.READ_PHONE_STATE};
 
     private static final int REQUEST_CODE = 1024;
     private static final int COMPRESS_REQUEST_CODE = 2048;
+    private static final int REQUEST_PERMISSIONS = 2333;
 
     @BindView(R.id.inputLayout)
     ScrollView mInputLayout;
@@ -53,28 +72,12 @@ public class TopicCreateActivity extends BaseActivity implements View.OnClickLis
     Spinner mSpinner;
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
-
-    @BindView(R.id.font_blod)
-    ImageView mFontBlod;
-    @BindView(R.id.font_italic)
-    ImageView mFontItalic;
-    @BindView(R.id.quote)
-    ImageView mOpQuote;
-    @BindView(R.id.list_ul)
-    ImageView mOpUl;
-    @BindView(R.id.list_ol)
-    ImageView mOpOl;
-    @BindView(R.id.op_link)
-    ImageView mOpLink;
-    @BindView(R.id.op_image)
-    ImageView mOpImage;
-    @BindView(R.id.op_code)
-    ImageView mOpCode;
-    @BindView(R.id.op_preview)
-    ImageView mOpPreview;
+    @BindView(R.id.opLayout)
+    HorizontalOperatorView mOpLayout;
 
     private MdEditFragment mEditFragment;
     private MdPreviewFragment mPreviewFragment;
+    private TopicCreatePresenter mPresenter = new TopicCreatePresenter();
     private boolean mIsPreview;
 
     @Override
@@ -94,6 +97,11 @@ public class TopicCreateActivity extends BaseActivity implements View.OnClickLis
             case android.R.id.home:
                 finish();
                 break;
+            case R.id.action_send_post:
+                mEditFragment.getPerformEditable().performInsertTail();
+                mPresenter.createPost(UserCache.getUserToken(), mEditFragment.getTitle()
+                        , "share", mEditFragment.getContent());
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -112,19 +120,12 @@ public class TopicCreateActivity extends BaseActivity implements View.OnClickLis
         } else {
             mEditFragment = FragmentUtils.findFragment(getSupportFragmentManager(), MdEditFragment.class);
         }
+
     }
 
     @Override
     public void setListeners() {
-        mFontBlod.setOnClickListener(this);
-        mFontItalic.setOnClickListener(this);
-        mOpQuote.setOnClickListener(this);
-        mOpUl.setOnClickListener(this);
-        mOpOl.setOnClickListener(this);
-        mOpLink.setOnClickListener(this);
-        mOpImage.setOnClickListener(this);
-        mOpCode.setOnClickListener(this);
-        mOpPreview.setOnClickListener(this);
+        mOpLayout.setOperationListener(this);
         mInputLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
@@ -137,16 +138,16 @@ public class TopicCreateActivity extends BaseActivity implements View.OnClickLis
 
     @Override
     public void bind() {
-
+        mPresenter.attachView(this);
     }
 
     @Override
     public void unBind() {
-
+        mPresenter.detachView();
     }
 
     @Override
-    public void onClick(View v) {
+    public void operation(View v) {
         switch (v.getId()) {
             case R.id.font_blod:
             case R.id.font_italic:
@@ -160,9 +161,7 @@ public class TopicCreateActivity extends BaseActivity implements View.OnClickLis
                 insertLink();
                 break;
             case R.id.op_image:
-                BoxingConfig singleImgConfig = new BoxingConfig(BoxingConfig.Mode.SINGLE_IMG);
-                singleImgConfig.needCamera();
-                Boxing.of(singleImgConfig).withIntent(this, BoxingActivity.class).start(this, COMPRESS_REQUEST_CODE);
+                checkPermission();
                 break;
             case R.id.op_preview:
                 if (mEditFragment != null && mPreviewFragment != null) {
@@ -178,6 +177,22 @@ public class TopicCreateActivity extends BaseActivity implements View.OnClickLis
         }
     }
 
+    private void checkPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ContextCompat.checkSelfPermission(this, PHOTO_PERMISSIONS[0]) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(PHOTO_PERMISSIONS, REQUEST_PERMISSIONS);
+        } else {
+            startAlbum();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (REQUEST_PERMISSIONS == requestCode && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            startAlbum();
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -185,55 +200,63 @@ public class TopicCreateActivity extends BaseActivity implements View.OnClickLis
             final ArrayList<BaseMedia> medias = Boxing.getResult(data);
             if (requestCode == REQUEST_CODE) {
             } else if (requestCode == COMPRESS_REQUEST_CODE) {
-                android.util.Log.d("ljx", "path = " + medias.get(0).getPath());
+                BaseMedia media = medias.get(0);
+                if (!(media instanceof ImageMedia)) {
+                    return;
+                }
+                ImageMedia imageMedia = (ImageMedia) media;
+                String targetPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/" + System.currentTimeMillis() + "_compress_avatar.jpg";
+                String resultPath = BitmapCompressUtil.compressToPath(imageMedia.getPath(), targetPath);
+                android.util.Log.d("ljx", "result = " + resultPath);
+                try {
+                    final AVFile file = AVFile.withAbsoluteLocalPath("LeanCloud.png", resultPath);
+                    final UploadingDialog dialog = new UploadingDialog(this);
+                    dialog.show();
+                    file.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(AVException e) {
+                            if (e == null) {
+                                mEditFragment.getPerformEditable().perform(R.id.op_image, file.getUrl());
+                            } else {
+                                Toast.makeText(TopicCreateActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                            dialog.dismiss();
+                        }
+                    }, new ProgressCallback() {
+                        @Override
+                        public void done(Integer integer) {
+                            dialog.updateProgress(integer);
+                        }
+                    });
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
 
+    private void startAlbum() {
+        BoxingConfig singleImgConfig = new BoxingConfig(BoxingConfig.Mode.SINGLE_IMG);
+        singleImgConfig.needCamera();
+        Boxing.of(singleImgConfig).withIntent(this, BoxingActivity.class).start(this, COMPRESS_REQUEST_CODE);
+    }
+
     private void insertLink() {
-        View rootView = LayoutInflater.from(this).inflate(R.layout.layout_insert_link_dialog, null);
-        final AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle("插入链接")
-                .setView(rootView).create();
-
-        final TextInputLayout titleHint = (TextInputLayout) rootView.findViewById(R.id.inputNameHint);
-        final TextInputLayout linkHint = (TextInputLayout) rootView.findViewById(R.id.inputHint);
-        final EditText title = (EditText) rootView.findViewById(R.id.name);
-        final EditText link = (EditText) rootView.findViewById(R.id.text);
-
-        rootView.findViewById(R.id.confirm).setOnClickListener(new View.OnClickListener() {
+        new InsertLinkDialog(this, new InsertLinkDialog.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                String titleStr = title.getText().toString().trim();
-                String linkStr = link.getText().toString().trim();
-
-                if (TextUtils.isEmpty(titleStr)) {
-                    titleHint.setError("不能为空");
-                    return;
-                }
-                if (TextUtils.isEmpty(linkStr)) {
-                    linkHint.setError("不能为空");
-                    return;
-                }
-
-                if (titleHint.isErrorEnabled())
-                    titleHint.setErrorEnabled(false);
-                if (linkHint.isErrorEnabled())
-                    linkHint.setErrorEnabled(false);
-
-                mEditFragment.getPerformEditable().perform(R.id.op_link, titleStr, linkStr);
-                dialog.dismiss();
+            public void confirm(String title, String url) {
+                mEditFragment.getPerformEditable().perform(R.id.op_link, title, url);
             }
-        });
 
-        rootView.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
+            public void cancel() {
 
-        dialog.show();
+            }
+        }).show();
+    }
+
+    @Override
+    public void onFailed() {
 
     }
 }

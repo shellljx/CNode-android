@@ -58,16 +58,13 @@
 
     </ScrollView>
 
-    <HorizontalScrollView
+    <com.licrafter.cnode.widget.HorizontalOperatorView
         android:id="@+id/opLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
-        android:background="#f3f3f3">
-
-        <include layout="@layout/include_operator"/>
-    </HorizontalScrollView>
+        android:background="#f3f3f3"/>
 
     <View
         android:id="@+id/space"

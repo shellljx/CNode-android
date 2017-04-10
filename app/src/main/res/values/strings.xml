@@ -29,4 +29,5 @@
     <string name="all_photo">所有图片</string>
     <string name="ok">确定</string>
     <string name="preview">预览</string>
+    <string name="uploading_progress">正在上传: %d/100</string>
 </resources>

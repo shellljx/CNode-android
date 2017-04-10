@@ -14,32 +14,25 @@ import retrofit2.converter.gson.GsonConverterFactory;
  **/
 public class CNodeApi {
 
-    private static CNodeApi instance;
-    private CNodeService mService;
+    private static CNodeService cnodeInstance;
 
-    public static CNodeApi getInstance() {
-        if (instance == null) {
-            instance = new CNodeApi();
+    public static CNodeService getCNodeService() {
+        if (cnodeInstance == null) {
+            initCNodeService();
         }
-        return instance;
+        return cnodeInstance;
     }
 
-    public CNodeApi() {
-        if (mService == null) {
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(Urls.BASE_URL)
-                    .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                    .addConverterFactory(GsonConverterFactory.create(new GsonBuilder()
-                            .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
-                            .serializeNulls()
-                            .create()))
-                    .client(HttpClient.INSTANCE.getOkHttpClient())
-                    .build();
-            mService = retrofit.create(CNodeService.class);
-        }
-    }
-
-    public CNodeService getService() {
-        return mService;
+    private static void initCNodeService() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Urls.BASE_URL)
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(new GsonBuilder()
+                        .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
+                        .serializeNulls()
+                        .create()))
+                .client(HttpClient.INSTANCE.getOkHttpClient())
+                .build();
+        cnodeInstance = retrofit.create(CNodeService.class);
     }
 }

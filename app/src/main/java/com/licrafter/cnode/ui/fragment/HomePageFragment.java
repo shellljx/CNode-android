@@ -7,6 +7,8 @@ import android.widget.ImageButton;
 
 import com.licrafter.cnode.R;
 import com.licrafter.cnode.base.BaseFragment;
+import com.licrafter.cnode.cache.UserCache;
+import com.licrafter.cnode.ui.activity.LoginActivity;
 import com.licrafter.cnode.ui.activity.TopicCreateActivity;
 import com.licrafter.cnode.utils.FragmentUtils;
 
@@ -54,7 +56,11 @@ public class HomePageFragment extends BaseFragment {
         mBtnCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getBaseActivity(), TopicCreateActivity.class));
+                if (UserCache.getUserToken() != null) {
+                    startActivity(new Intent(getBaseActivity(), TopicCreateActivity.class));
+                } else {
+                    startActivity(new Intent(getBaseActivity(), LoginActivity.class));
+                }
             }
         });
     }

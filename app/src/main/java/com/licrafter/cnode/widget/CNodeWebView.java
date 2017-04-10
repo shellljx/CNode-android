@@ -40,7 +40,6 @@ public class CNodeWebView extends WebView {
         webSettings.setJavaScriptEnabled(true);
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
         webSettings.setDomStorageEnabled(true);
-        webSettings.setLoadWithOverviewMode(true);
         webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
         webSettings.setLoadsImagesAutomatically(true);
         addJavascriptInterface(new JavaScriptObject(getContext()), "cnode");
@@ -75,6 +74,7 @@ public class CNodeWebView extends WebView {
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            android.util.Log.d("ljx","url = "+url);
             view.loadUrl(url);
             return true;
         }

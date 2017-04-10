@@ -37,6 +37,9 @@ public class PerformEditable {
             case R.id.op_code:
                 performConsole();
                 break;
+            case R.id.op_image:
+                performInsertPhoto(params);
+                break;
             case R.id.op_link:
                 performInsertLink(params);
                 break;
@@ -113,7 +116,7 @@ public class PerformEditable {
             mEditText.getText().insert(selectionStart, result);
             mEditText.setSelection(selectionStart + 1);
         } else if (param.length == 1) {
-            result = "[" + param[0] + "](" + param[0] + ")\n";
+            result = "[image](" + param[0] + ")\n";
             mEditText.getText().insert(selectionStart, result);
             mEditText.setSelection(selectionStart + result.length());
         } else {
@@ -121,6 +124,11 @@ public class PerformEditable {
             mEditText.getText().insert(selectionStart, result);
             mEditText.setSelection(selectionStart + result.length());
         }
+    }
+
+    public void performInsertTail() {
+        String tail = "\n\n" + "[来自CNode-Android](https://github.com/shellljx/CNode-android)";
+        mEditText.setText(mEditText.getText().toString() + tail);
     }
 
     private void performInsertPhoto(Object[] param) {

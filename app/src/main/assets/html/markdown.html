@@ -1045,7 +1045,7 @@ body .markdown-body
             parseDone();
         }
         function parseDone() {
-            window.handler.onHTMLGenerated();
+            window.handler.onHTMLGenerated(document.getElementById('content').innerHTML);
         }
 
     </script>

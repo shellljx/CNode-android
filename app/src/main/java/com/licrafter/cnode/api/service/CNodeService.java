@@ -2,10 +2,12 @@ package com.licrafter.cnode.api.service;
 
 import com.licrafter.cnode.model.LoginBody;
 import com.licrafter.cnode.model.LoginResultModel;
+import com.licrafter.cnode.model.PostTopicResultModel;
 import com.licrafter.cnode.model.TabModel;
 import com.licrafter.cnode.model.TopicDetailModel;
 import com.licrafter.cnode.model.UnReadCountModel;
 import com.licrafter.cnode.model.UserDetailModel;
+import com.licrafter.cnode.model.entity.PostTopic;
 
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -82,4 +84,14 @@ public interface CNodeService {
      */
     @POST("message/count")
     Observable<UnReadCountModel> getUnReadCount(@Body String accesstoken);
+
+
+    /**
+     * 创建新标题
+     *
+     * @param topic
+     * @return
+     */
+    @POST("topics")
+    Observable<PostTopicResultModel> createTopic(@Body PostTopic topic);
 }

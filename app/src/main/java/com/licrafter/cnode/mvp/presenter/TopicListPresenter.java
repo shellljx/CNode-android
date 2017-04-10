@@ -67,9 +67,9 @@ public class TopicListPresenter extends BasePresenter<TopicListFragment> {
 
     private Observable<TabModel> getObservable(int pageIndex) {
         if (mTab == null) {
-            return CNodeApi.getInstance().getService().getTopicPage(pageIndex, PAGE_LIMIT, true);
+            return CNodeApi.getCNodeService().getTopicPage(pageIndex, PAGE_LIMIT, true);
         } else {
-            return CNodeApi.getInstance().getService().getTabByName(mTab, pageIndex, PAGE_LIMIT, true);
+            return CNodeApi.getCNodeService().getTabByName(mTab, pageIndex, PAGE_LIMIT, true);
         }
     }
 

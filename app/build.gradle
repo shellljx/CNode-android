@@ -28,6 +28,14 @@ android {
             proguardFile '/Users/lijx/AndroidStudioProjects/github/CNode/app/proguard-rules.pro'
         }
     }
+    //为了解决部分第三方库重复打包了META-INF的问题
+    packagingOptions{
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+    }
+    lintOptions {
+        abortOnError false
+    }
 }
 
 dependencies {
@@ -55,5 +63,7 @@ dependencies {
         exclude group: 'com.squareup.okio'
         exclude group: 'com.squareup.okhttp3'
     }
+    // LeanCloud 基础包
+    compile ('cn.leancloud.android:avoscloud-sdk:v3.+')
     compile project(path: ':album')
 }

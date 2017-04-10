@@ -7,6 +7,7 @@ import android.support.v4.widget.NestedScrollView;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.webkit.JavascriptInterface;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -41,6 +42,7 @@ public class MarkdownPreview extends NestedScrollView {
                 WebView.enableSlowWholeDocumentDraw();
             }
             this.mWebView = new WebView(this.mContext);
+            this.mWebView.getSettings().setDomStorageEnabled(true);
             this.mWebView.getSettings().setJavaScriptEnabled(true);
             this.mWebView.setVerticalScrollBarEnabled(false);
             this.mWebView.setHorizontalScrollBarEnabled(false);
@@ -80,7 +82,7 @@ public class MarkdownPreview extends NestedScrollView {
         }
 
         @JavascriptInterface
-        public void onHTMLGenerated() {
+        public void onHTMLGenerated(String html) {
 
         }
     }
@@ -99,10 +101,9 @@ public class MarkdownPreview extends NestedScrollView {
             new StringBuilder("onReceivedError :errorCode:").append(i).append("description:").append(str).append("failingUrl").append(str2);
         }
 
-        public final boolean shouldOverrideUrlLoading(WebView webView, String url) {
-            if (!TextUtils.isEmpty(url)) {
-                // TODO: 2017/4/5
-            }
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            // TODO: 2017/4/10
             return true;
         }
     }

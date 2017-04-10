@@ -15,7 +15,7 @@ import rx.schedulers.Schedulers;
 public class TopicDetailPresenter extends BasePresenter<TopicDetailActivity> {
 
     public void getTopicDetailById(String topicId) {
-        CNodeApi.getInstance().getService().getTopicDetailById(topicId, null, true)
+        CNodeApi.getCNodeService().getTopicDetailById(topicId, null, true)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<TopicDetailModel>() {
