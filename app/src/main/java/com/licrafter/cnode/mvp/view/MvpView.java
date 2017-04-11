@@ -5,5 +5,5 @@ package com.licrafter.cnode.mvp.view;
  * date 2017/2/24 下午4:17
  **/
 public interface MvpView {
-    void onFailed();
+    void onFailed(Throwable e);
 }

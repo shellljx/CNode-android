@@ -26,7 +26,7 @@ public class TopicDetailPresenter extends BasePresenter<TopicDetailActivity> {
 
                     @Override
                     public void onError(Throwable e) {
-                        getView().onFailed();
+                        getView().onFailed(e);
                     }
 
                     @Override
@@ -34,7 +34,7 @@ public class TopicDetailPresenter extends BasePresenter<TopicDetailActivity> {
                         if (topicDetailModel.isSuccess()) {
                             getView().notifyGetDetailSuccess(topicDetailModel);
                         } else {
-                            getView().onFailed();
+                            getView().onFailed(new Throwable("获取详情失败"));
                         }
                     }
                 });

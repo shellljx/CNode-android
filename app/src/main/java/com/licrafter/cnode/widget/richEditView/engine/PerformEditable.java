@@ -127,8 +127,11 @@ public class PerformEditable {
     }
 
     public void performInsertTail() {
-        String tail = "\n\n" + "[来自CNode-Android](https://github.com/shellljx/CNode-android)";
-        mEditText.setText(mEditText.getText().toString() + tail);
+        String tail = "\n\n" + "[来自CNode-Android (≥v≤)o~~](https://github.com/shellljx/CNode-android)";
+        String source = mEditText.getText().toString();
+        if (!source.contains(tail)) {
+            mEditText.setText(mEditText.getText().toString() + tail);
+        }
     }
 
     private void performInsertPhoto(Object[] param) {

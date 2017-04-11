@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.licrafter.cnode.R;
 import com.licrafter.cnode.base.BaseFragment;
+import com.licrafter.cnode.model.entity.TAB;
 
 import butterknife.BindView;
 
@@ -87,13 +88,13 @@ public class CategoryFragment extends BaseFragment {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return TopicListFragment.instance("good");
+                    return TopicListFragment.instance(TAB.GOOD.getEnName());
                 case 1:
-                    return TopicListFragment.instance("share");
+                    return TopicListFragment.instance(TAB.SHARE.getEnName());
                 case 2:
-                    return TopicListFragment.instance("ask");
+                    return TopicListFragment.instance(TAB.ASK.getEnName());
                 case 3:
-                    return TopicListFragment.instance("job");
+                    return TopicListFragment.instance(TAB.JOB.getEnName());
                 default:
                     return null;
             }
@@ -110,13 +111,13 @@ public class CategoryFragment extends BaseFragment {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "精华";
+                    return TAB.GOOD.getZhName();
                 case 1:
-                    return "分享";
+                    return TAB.SHARE.getZhName();
                 case 2:
-                    return "问答";
+                    return TAB.ASK.getZhName();
                 case 3:
-                    return "招聘";
+                    return TAB.JOB.getZhName();
                 default:
                     return null;
             }

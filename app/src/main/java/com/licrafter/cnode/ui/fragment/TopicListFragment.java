@@ -125,7 +125,7 @@ public class TopicListFragment extends BaseFragment implements MvpView {
     }
 
     @Override
-    public void onFailed() {
+    public void onFailed(Throwable e) {
         Toast.makeText(getContext(), "加载错误，请重试!", Toast.LENGTH_SHORT).show();
         mRefreshLayout.setRefreshing(false);
     }

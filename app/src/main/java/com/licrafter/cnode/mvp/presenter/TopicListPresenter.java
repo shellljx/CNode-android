@@ -47,7 +47,7 @@ public class TopicListPresenter extends BasePresenter<TopicListFragment> {
 
                     @Override
                     public void onError(Throwable e) {
-                        getView().onFailed();
+                        getView().onFailed(e);
                     }
 
                     @Override
@@ -58,7 +58,7 @@ public class TopicListPresenter extends BasePresenter<TopicListFragment> {
                         if (tabModel.isSuccess()) {
                             getView().notifySuccess(tabModel, refresh);
                         } else {
-                            getView().onFailed();
+                            getView().onFailed(new Throwable("获取列表失败"));
                         }
                     }
                 }));

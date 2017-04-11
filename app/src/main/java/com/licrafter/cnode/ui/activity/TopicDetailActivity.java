@@ -19,6 +19,7 @@ import com.licrafter.cnode.R;
 import com.licrafter.cnode.base.BaseActivity;
 import com.licrafter.cnode.model.TopicDetailModel;
 import com.licrafter.cnode.model.entity.Reply;
+import com.licrafter.cnode.model.entity.TAB;
 import com.licrafter.cnode.model.entity.TopicDetail;
 import com.licrafter.cnode.mvp.presenter.TopicDetailPresenter;
 import com.licrafter.cnode.mvp.view.MvpView;
@@ -155,7 +156,7 @@ public class TopicDetailActivity extends BaseActivity implements MvpView {
     }
 
     @Override
-    public void onFailed() {
+    public void onFailed(Throwable e) {
         mRefreshLayout.setRefreshing(false);
     }
 
@@ -174,7 +175,7 @@ public class TopicDetailActivity extends BaseActivity implements MvpView {
         mk_content.loadHtml(detail.getContent());
         tv_created_at.setText(DateUtils.format(detail.getCreate_at()));
         tv_visit_count.setText(String.format(getString(R.string.visit_count), detail.getVisit_count()));
-        tv_tab.setText(String.format(getString(R.string.tab_name), detail.getTab()));
+        tv_tab.setText(String.format(getString(R.string.tab_name), TAB.ValueOf(detail.getTab())));
     }
 
     private class DetailAdapter extends RecyclerView.Adapter {

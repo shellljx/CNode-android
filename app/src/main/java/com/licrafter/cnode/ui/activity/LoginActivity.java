@@ -126,7 +126,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     }
 
     @Override
-    public void onFailed() {
+    public void onFailed(Throwable e) {
         loginDialog.dismiss();
         Toast.makeText(this, "登录失败，请重试!", Toast.LENGTH_SHORT).show();
     }

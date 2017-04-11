@@ -181,7 +181,7 @@ public class MineFragment extends BaseFragment implements MvpView, View.OnClickL
     }
 
     @Override
-    public void onFailed() {
+    public void onFailed(Throwable e) {
         mRefreshLayout.setRefreshing(false);
     }
 

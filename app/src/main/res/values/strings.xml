@@ -30,4 +30,6 @@
     <string name="ok">确定</string>
     <string name="preview">预览</string>
     <string name="uploading_progress">正在上传: %d/100</string>
+
+    <string name="toast_create_topic_success">创建帖子成功!</string>
 </resources>

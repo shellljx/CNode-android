@@ -6,29 +6,21 @@ import android.content.pm.PackageManager;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.NonNull;
-import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.widget.EditText;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVFile;
-import com.avos.avoscloud.ProgressCallback;
-import com.avos.avoscloud.SaveCallback;
 import com.bilibili.boxing.Boxing;
 import com.bilibili.boxing.model.config.BoxingConfig;
 import com.bilibili.boxing.model.entity.BaseMedia;
@@ -36,17 +28,17 @@ import com.bilibili.boxing.model.entity.impl.ImageMedia;
 import com.licrafter.cnode.R;
 import com.licrafter.cnode.base.BaseActivity;
 import com.licrafter.cnode.cache.UserCache;
+import com.licrafter.cnode.model.PostTopicResultModel;
+import com.licrafter.cnode.model.entity.TAB;
 import com.licrafter.cnode.mvp.presenter.TopicCreatePresenter;
 import com.licrafter.cnode.mvp.view.MvpView;
 import com.licrafter.cnode.ui.fragment.MdEditFragment;
 import com.licrafter.cnode.ui.fragment.MdPreviewFragment;
-import com.licrafter.cnode.utils.BitmapCompressUtil;
 import com.licrafter.cnode.utils.FragmentUtils;
 import com.licrafter.cnode.widget.HorizontalOperatorView;
 import com.licrafter.cnode.widget.dialog.InsertLinkDialog;
 import com.licrafter.cnode.widget.dialog.UploadingDialog;
 
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import boxing_impl.ui.BoxingActivity;
@@ -77,33 +69,15 @@ public class TopicCreateActivity extends BaseActivity implements HorizontalOpera
 
     private MdEditFragment mEditFragment;
     private MdPreviewFragment mPreviewFragment;
+    private AlertDialog mDialog;
+    private UploadingDialog mUploadDialog;
     private TopicCreatePresenter mPresenter = new TopicCreatePresenter();
+    private TAB mTab = TAB.SHARE;
     private boolean mIsPreview;
 
     @Override
     public int getContentView() {
         return R.layout.activity_topic_create;
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        new MenuInflater(this).inflate(R.menu.menu_send_post, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                break;
-            case R.id.action_send_post:
-                mEditFragment.getPerformEditable().performInsertTail();
-                mPresenter.createPost(UserCache.getUserToken(), mEditFragment.getTitle()
-                        , "share", mEditFragment.getContent());
-                break;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -120,7 +94,8 @@ public class TopicCreateActivity extends BaseActivity implements HorizontalOpera
         } else {
             mEditFragment = FragmentUtils.findFragment(getSupportFragmentManager(), MdEditFragment.class);
         }
-
+        mDialog = new AlertDialog.Builder(this).setMessage("正在发送...").create();
+        mUploadDialog = new UploadingDialog(this);
     }
 
     @Override
@@ -134,6 +109,18 @@ public class TopicCreateActivity extends BaseActivity implements HorizontalOpera
                 mSpace.setLayoutParams(new LinearLayout.LayoutParams(1, Math.abs(rect.bottom - getWindowManager().getDefaultDisplay().getHeight())));
             }
         });
+        mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String zh = getResources().getStringArray(R.array.categories)[position];
+                mTab = TAB.ValueOf(zh);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     @Override
@@ -144,6 +131,25 @@ public class TopicCreateActivity extends BaseActivity implements HorizontalOpera
     @Override
     public void unBind() {
         mPresenter.detachView();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        new MenuInflater(this).inflate(R.menu.menu_send_post, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+            case R.id.action_send_post:
+                sendPost();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -198,41 +204,26 @@ public class TopicCreateActivity extends BaseActivity implements HorizontalOpera
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             final ArrayList<BaseMedia> medias = Boxing.getResult(data);
-            if (requestCode == REQUEST_CODE) {
-            } else if (requestCode == COMPRESS_REQUEST_CODE) {
+            if (requestCode == COMPRESS_REQUEST_CODE) {
+                if (medias == null || medias.size() == 0) {
+                    return;
+                }
                 BaseMedia media = medias.get(0);
                 if (!(media instanceof ImageMedia)) {
                     return;
                 }
                 ImageMedia imageMedia = (ImageMedia) media;
-                String targetPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/" + System.currentTimeMillis() + "_compress_avatar.jpg";
-                String resultPath = BitmapCompressUtil.compressToPath(imageMedia.getPath(), targetPath);
-                android.util.Log.d("ljx", "result = " + resultPath);
-                try {
-                    final AVFile file = AVFile.withAbsoluteLocalPath("LeanCloud.png", resultPath);
-                    final UploadingDialog dialog = new UploadingDialog(this);
-                    dialog.show();
-                    file.saveInBackground(new SaveCallback() {
-                        @Override
-                        public void done(AVException e) {
-                            if (e == null) {
-                                mEditFragment.getPerformEditable().perform(R.id.op_image, file.getUrl());
-                            } else {
-                                Toast.makeText(TopicCreateActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                            dialog.dismiss();
-                        }
-                    }, new ProgressCallback() {
-                        @Override
-                        public void done(Integer integer) {
-                            dialog.updateProgress(integer);
-                        }
-                    });
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
+                mPresenter.uploadImg(imageMedia.getPath());
+                mUploadDialog.show();
             }
         }
+    }
+
+    private void sendPost() {
+        mDialog.show();
+        mEditFragment.getPerformEditable().performInsertTail();
+        mPresenter.createPost(UserCache.getUserToken(), mEditFragment.getTitle()
+                , mTab.getEnName(), mEditFragment.getContent());
     }
 
     private void startAlbum() {
@@ -256,7 +247,33 @@ public class TopicCreateActivity extends BaseActivity implements HorizontalOpera
     }
 
     @Override
-    public void onFailed() {
+    public void onFailed(Throwable e) {
+        Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+    }
 
+    public void notifySendPostSuccess(PostTopicResultModel result) {
+        Toast.makeText(this, getString(R.string.toast_create_topic_success), Toast.LENGTH_SHORT).show();
+        TopicDetailActivity.start(this, result.getTopic_id());
+        finish();
+    }
+
+    public void uploadProgress(Integer integer) {
+        mUploadDialog.updateProgress(integer);
+    }
+
+    public void notifyUploadSuccess(String url) {
+        mEditFragment.getPerformEditable().perform(R.id.op_image, url);
+    }
+
+    public void notifyUploadFailed(Throwable e) {
+        Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+    }
+
+    public void dismissUploadDialog() {
+        mUploadDialog.dismiss();
+    }
+
+    public void dismissSendDialog() {
+        mDialog.dismiss();
     }
 }
