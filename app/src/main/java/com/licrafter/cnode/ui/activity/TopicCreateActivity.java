@@ -248,6 +248,7 @@ public class TopicCreateActivity extends BaseActivity implements HorizontalOpera
 
     @Override
     public void onFailed(Throwable e) {
+        
         Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
     }
 

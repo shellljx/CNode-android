@@ -41,7 +41,7 @@ public class AsyncImageGetter implements Html.ImageGetter {
     @Override
     public Drawable getDrawable(String source) {
         final URLDrawable urlDrawable = new URLDrawable();
-
+        source = source.indexOf("http") < 0 ? "https:" + source : source;
         Picasso.with(mContext)
                 .load(source)
                 .into(new Target() {

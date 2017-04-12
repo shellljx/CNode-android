@@ -2,6 +2,8 @@ package com.licrafter.cnode.api.service;
 
 import com.licrafter.cnode.model.LoginBody;
 import com.licrafter.cnode.model.LoginResultModel;
+import com.licrafter.cnode.model.MarkResultModel;
+import com.licrafter.cnode.model.NotificationModel;
 import com.licrafter.cnode.model.PostTopicResultModel;
 import com.licrafter.cnode.model.TabModel;
 import com.licrafter.cnode.model.TopicDetailModel;
@@ -56,7 +58,7 @@ public interface CNodeService {
      * @return
      */
     @GET("topic/{topicId}")
-    Observable<TopicDetailModel> getTopicDetailById(@Path("topicId") String topicId, @Query("accesstoken") String accesstoken, @Query("mdrender") boolean mdrender);
+    Observable<TopicDetailModel> getTopicDetailById(@Path("topicId") String topicId, @Query("accesstoken") String accesstoken, @Query("mdrender") Boolean mdrender);
 
     /**
      * 获取用户详细信息
@@ -85,6 +87,24 @@ public interface CNodeService {
     @POST("message/count")
     Observable<UnReadCountModel> getUnReadCount(@Body String accesstoken);
 
+    /**
+     * 获取所有的消息，包括已读和未读
+     *
+     * @param accesstoken
+     * @param mdrender
+     * @return
+     */
+    @GET("messages")
+    Observable<NotificationModel> getAllNotifications(@Query("accesstoken") String accesstoken, @Query("mdrender") Boolean mdrender);
+
+    /**
+     * 标记所有消息
+     *
+     * @param accesstoken
+     * @return
+     */
+    @POST("message/mark_all")
+    Observable<MarkResultModel> markAllMsg(@Body String accesstoken);
 
     /**
      * 创建新标题

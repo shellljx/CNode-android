@@ -18,11 +18,14 @@ import com.licrafter.cnode.utils.BitmapCompressUtil;
 import com.licrafter.cnode.widget.dialog.UploadingDialog;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
+import retrofit2.adapter.rxjava.HttpException;
 import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
@@ -38,6 +41,12 @@ public class TopicCreatePresenter extends BasePresenter<TopicCreateActivity> {
         mCompositeSubscription.add(CNodeApi.getCNodeService().createTopic(topic)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnTerminate(new Action0() {
+                    @Override
+                    public void call() {
+                        getView().dismissSendDialog();
+                    }
+                })
                 .subscribe(new Observer<PostTopicResultModel>() {
                     @Override
                     public void onCompleted() {
@@ -46,13 +55,16 @@ public class TopicCreatePresenter extends BasePresenter<TopicCreateActivity> {
 
                     @Override
                     public void onError(Throwable e) {
-                        getView().dismissSendDialog();
+                        if (e instanceof HttpException){
+                            HttpException exc = (HttpException) e;
+                            android.util.Log.d("ljx","code = "+exc.code()+"msg = "+exc.response().errorBody());
+                            // TODO: 2017/4/12  
+                        }
                         getView().onFailed(e);
                     }
 
                     @Override
                     public void onNext(PostTopicResultModel result) {
-                        getView().dismissSendDialog();
                         getView().notifySendPostSuccess(result);
                     }
                 }));
@@ -72,6 +84,7 @@ public class TopicCreatePresenter extends BasePresenter<TopicCreateActivity> {
                         public void done(AVException e) {
                             if (e == null) {
                                 subscriber.onNext(file.getUrl());
+                                subscriber.onCompleted();
                             } else {
                                 subscriber.onError(e);
                             }
@@ -86,6 +99,11 @@ public class TopicCreatePresenter extends BasePresenter<TopicCreateActivity> {
                     Observable.error(e);
                 }
             }
+        }).doOnTerminate(new Action0() {
+            @Override
+            public void call() {
+                getView().dismissUploadDialog();
+            }
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<String>() {
@@ -96,13 +114,11 @@ public class TopicCreatePresenter extends BasePresenter<TopicCreateActivity> {
 
                     @Override
                     public void onError(Throwable e) {
-                        getView().dismissUploadDialog();
                         getView().notifyUploadFailed(e);
                     }
 
                     @Override
                     public void onNext(String url) {
-                        getView().dismissUploadDialog();
                         getView().notifyUploadSuccess(url);
                     }
                 }));

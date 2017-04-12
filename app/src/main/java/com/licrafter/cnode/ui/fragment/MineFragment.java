@@ -40,7 +40,8 @@ import butterknife.BindView;
  **/
 public class MineFragment extends BaseFragment implements MvpView, View.OnClickListener {
 
-    private static final int REQ_LOGIN = 0x001;
+    private static final int REQ_LOGIN = 0x111;
+    private static final int REQ_NOTIFICATION = 0x223;
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -198,7 +199,7 @@ public class MineFragment extends BaseFragment implements MvpView, View.OnClickL
                 if (UserCache.getUserName() == null) {
                     startActivityForResult(new Intent(getActivity(), LoginActivity.class), REQ_LOGIN);
                 } else {
-                    startActivity(new Intent(getActivity(), NotificationCenterActivity.class));
+                    startActivityForResult(new Intent(getActivity(), NotificationCenterActivity.class), REQ_NOTIFICATION);
                 }
                 break;
         }
@@ -207,8 +208,15 @@ public class MineFragment extends BaseFragment implements MvpView, View.OnClickL
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQ_LOGIN && resultCode == Activity.RESULT_OK) {
-            refreshUserProfit();
+        if (resultCode == Activity.RESULT_OK) {
+            switch (requestCode) {
+                case REQ_LOGIN:
+                    refreshUserProfit();
+                    break;
+                case REQ_NOTIFICATION:
+                    mDot.setVisibility(View.GONE);
+                    break;
+            }
         }
     }
 
@@ -216,7 +224,7 @@ public class MineFragment extends BaseFragment implements MvpView, View.OnClickL
         mRefreshLayout.setRefreshing(false);
         if (model.getData() != 0) {
             mDot.setVisibility(View.VISIBLE);
-            mDot.setText(model.getData());
+            mDot.setText(String.valueOf(model.getData()));
         } else {
             mDot.setVisibility(View.GONE);
         }

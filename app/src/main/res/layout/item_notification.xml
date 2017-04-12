@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:padding="@dimen/activity_horizontal_margin">
+
+    <com.makeramen.roundedimageview.RoundedImageView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/iv_avatar"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginRight="10dp"
+        android:scaleType="centerCrop"
+        app:riv_corner_radius="30dip"
+        app:riv_oval="true"/>
+
+    <TextView
+        android:id="@+id/tv_user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="5dp"
+        android:layout_toRightOf="@id/iv_avatar"
+        android:maxLines="1"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_size_normal"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/tv_action"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="5dp"
+        android:layout_toRightOf="@id/tv_user_name"
+        android:maxLines="1"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_size_normal"/>
+
+    <TextView
+        android:id="@+id/tv_created_at"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/tv_action"
+        android:maxLines="1"
+        android:textColor="@color/gray2"
+        android:textSize="@dimen/text_size_normal"/>
+
+    <com.licrafter.cnode.widget.richTextView.RichTextView
+        android:id="@+id/tv_content"
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/tv_user_name"
+        android:layout_below="@id/tv_user_name"/>
+
+    <TextView
+        android:id="@+id/tv_topic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_content"
+        android:background="@drawable/bg_gray_rect"
+        android:padding="10dp"
+        android:textSize="@dimen/text_size_normal"/>
+
+</RelativeLayout>
