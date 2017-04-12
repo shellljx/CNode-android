@@ -3,6 +3,7 @@ package com.licrafter.cnode.api.service;
 import com.licrafter.cnode.model.CollectionBody;
 import com.licrafter.cnode.model.LoginBody;
 import com.licrafter.cnode.model.LoginResultModel;
+import com.licrafter.cnode.model.MarkAllBody;
 import com.licrafter.cnode.model.MarkResultModel;
 import com.licrafter.cnode.model.NotificationModel;
 import com.licrafter.cnode.model.PostTopicResultModel;
@@ -101,11 +102,10 @@ public interface CNodeService {
     /**
      * 标记所有消息
      *
-     * @param accesstoken
      * @return
      */
     @POST("message/mark_all")
-    Observable<MarkResultModel> markAllMsg(@Body String accesstoken);
+    Observable<MarkResultModel> markAllMsg(@Body MarkAllBody markAllBody);
 
     /**
      * 创建新标题
