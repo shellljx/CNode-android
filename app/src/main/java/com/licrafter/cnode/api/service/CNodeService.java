@@ -1,5 +1,6 @@
 package com.licrafter.cnode.api.service;
 
+import com.licrafter.cnode.model.CollectionBody;
 import com.licrafter.cnode.model.LoginBody;
 import com.licrafter.cnode.model.LoginResultModel;
 import com.licrafter.cnode.model.MarkResultModel;
@@ -114,4 +115,22 @@ public interface CNodeService {
      */
     @POST("topics")
     Observable<PostTopicResultModel> createTopic(@Body PostTopic topic);
+
+    /**
+     * 收藏帖子
+     *
+     * @param accessToken
+     * @return
+     */
+    @POST("topic_collect/collect")
+    Observable<Void> collectPost(@Body CollectionBody accessToken);
+
+    /**
+     * 取消收藏
+     *
+     * @param accessToken
+     * @return
+     */
+    @POST("topic_collect/de_collect ")
+    Observable<Void> deCollectPost(@Body CollectionBody accessToken);
 }

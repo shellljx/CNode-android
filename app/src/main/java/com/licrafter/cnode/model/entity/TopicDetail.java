@@ -54,6 +54,18 @@ public class TopicDetail {
     @Expose
     private List<Reply> replies = new ArrayList<>();
 
+    @SerializedName("is_collect")
+    @Expose
+    private Boolean is_collect;
+
+    public Boolean getIs_collect() {
+        return is_collect;
+    }
+
+    public void setIs_collect(Boolean is_collect) {
+        this.is_collect = is_collect;
+    }
+
     public List<Reply> getReplies() {
         return replies;
     }

@@ -1,5 +1,6 @@
 package com.licrafter.cnode.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -8,10 +9,15 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import com.licrafter.cnode.R;
 import com.licrafter.cnode.base.BaseFragment;
+import com.licrafter.cnode.cache.UserCache;
 import com.licrafter.cnode.model.entity.TAB;
+import com.licrafter.cnode.ui.activity.LoginActivity;
+import com.licrafter.cnode.ui.activity.TopicCreateActivity;
 
 import butterknife.BindView;
 
@@ -25,6 +31,8 @@ public class CategoryFragment extends BaseFragment {
     TabLayout mCategoryTabLayout;
     @BindView(R.id.categoryViewPager)
     ViewPager mCategoryViewPager;
+    @BindView(R.id.btn_create_topic)
+    ImageButton mCreateBtn;
 
     private CategoryAdapter mAdapter;
 
@@ -63,7 +71,16 @@ public class CategoryFragment extends BaseFragment {
 
     @Override
     public void setListeners() {
-
+        mCreateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (UserCache.getUserToken() != null) {
+                    startActivity(new Intent(getBaseActivity(), TopicCreateActivity.class));
+                } else {
+                    startActivity(new Intent(getBaseActivity(), LoginActivity.class));
+                }
+            }
+        });
     }
 
     @Override

@@ -10,9 +10,11 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.licrafter.cnode.R;
@@ -36,7 +38,7 @@ import butterknife.BindView;
  * author: shell
  * date 2017/2/27 下午3:53
  **/
-public class TopicDetailActivity extends BaseActivity implements MvpView {
+public class TopicDetailActivity extends BaseActivity implements MvpView, View.OnClickListener {
 
     @BindView(R.id.comments_recyclerview)
     RecyclerView mDetailRecyclerView;
@@ -50,6 +52,8 @@ public class TopicDetailActivity extends BaseActivity implements MvpView {
     //header
     @BindView(R.id.iv_avatar)
     RoundedImageView iv_avatar;
+    @BindView(R.id.iv_collect)
+    ImageView iv_collect;
     @BindView(R.id.tv_user_name)
     TextView tv_user_name;
     @BindView(R.id.tv_title)
@@ -67,6 +71,7 @@ public class TopicDetailActivity extends BaseActivity implements MvpView {
     private DetailAdapter mAdapter;
     private TopicDetailModel mDetail;
     private String mTopicId;
+    private boolean mIsCollected;
 
     @Override
     public int getContentView() {
@@ -98,6 +103,7 @@ public class TopicDetailActivity extends BaseActivity implements MvpView {
             }
         });
 
+        iv_collect.setOnClickListener(this);
         BottomSheetBehavior behavior = BottomSheetBehavior.from(mBottomSheet);
         behavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
@@ -141,7 +147,7 @@ public class TopicDetailActivity extends BaseActivity implements MvpView {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_topic_detail, menu);
+        new MenuInflater(this).inflate(R.menu.menu_topic_detail, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -150,6 +156,9 @@ public class TopicDetailActivity extends BaseActivity implements MvpView {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
+                break;
+            case R.id.action_share:
+                shareTopic();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -176,6 +185,32 @@ public class TopicDetailActivity extends BaseActivity implements MvpView {
         tv_created_at.setText(DateUtils.format(detail.getCreate_at()));
         tv_visit_count.setText(String.format(getString(R.string.visit_count), detail.getVisit_count()));
         tv_tab.setText(String.format(getString(R.string.tab_name), TAB.ValueOf(detail.getTab())));
+        setCollect(mDetail.getData().getIs_collect());
+    }
+
+    private void setCollect(boolean collect) {
+        mIsCollected = collect;
+        iv_collect.setImageResource(collect ? R.mipmap.ic_collected : R.mipmap.ic_uncollected);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.iv_collect:
+                mPresenter.makeCollected(!mIsCollected, mDetail.getData().getId());
+                setCollect(!mIsCollected);
+                break;
+        }
+    }
+
+    private void shareTopic() {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_SEND);
+        intent.putExtra(Intent.EXTRA_TEXT, mDetail.getData().getTitle()
+                + " 链接>https://cnodejs.org/topic/" + mDetail.getData().getId()
+                + "\n\n来自CNode-Android客户端(https://github.com/shellljx/CNode-android)");
+        intent.setType("text/plain");
+        startActivity(Intent.createChooser(intent, "分享到"));
     }
 
     private class DetailAdapter extends RecyclerView.Adapter {

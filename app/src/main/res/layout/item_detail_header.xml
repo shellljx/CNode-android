@@ -17,12 +17,10 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:layout_margin="10dp">
 
                 <com.makeramen.roundedimageview.RoundedImageView
                     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -37,10 +35,21 @@
                     android:id="@+id/tv_user_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
                     android:layout_marginLeft="15dp"
+                    android:layout_toRightOf="@id/iv_avatar"
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_size_normal"/>
-            </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/iv_collect"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:scaleType="centerInside"
+                    android:src="@mipmap/ic_uncollected"/>
+            </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"
