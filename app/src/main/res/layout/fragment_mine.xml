@@ -77,15 +77,11 @@
 
                             <TextView
                                 android:id="@+id/tv_dot"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_width="8dp"
+                                android:layout_height="8dp"
                                 android:layout_gravity="right"
-                                android:background="@drawable/bg_red_dot"
-                                android:padding="2dp"
-                                android:text="51"
-                                android:textColor="@color/white"
-                                android:textSize="7dp"
-                                android:visibility="gone"/>
+                                android:visibility="gone"
+                                android:background="@drawable/bg_red_dot"/>
                         </FrameLayout>
                     </RelativeLayout>
                 </android.support.v7.widget.Toolbar>

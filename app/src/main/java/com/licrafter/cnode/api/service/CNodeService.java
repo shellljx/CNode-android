@@ -85,8 +85,8 @@ public interface CNodeService {
      * @param accesstoken
      * @return
      */
-    @POST("message/count")
-    Observable<UnReadCountModel> getUnReadCount(@Body String accesstoken);
+    @GET("message/count")
+    Observable<UnReadCountModel> getUnReadCount(@Query("accesstoken") String accesstoken);
 
     /**
      * 获取所有的消息，包括已读和未读

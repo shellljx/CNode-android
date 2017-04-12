@@ -224,7 +224,6 @@ public class MineFragment extends BaseFragment implements MvpView, View.OnClickL
         mRefreshLayout.setRefreshing(false);
         if (model.getData() != 0) {
             mDot.setVisibility(View.VISIBLE);
-            mDot.setText(String.valueOf(model.getData()));
         } else {
             mDot.setVisibility(View.GONE);
         }
