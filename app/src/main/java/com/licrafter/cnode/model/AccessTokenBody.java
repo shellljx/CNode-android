@@ -7,12 +7,12 @@ import com.google.gson.annotations.SerializedName;
  * Created by lijx on 2017/4/12.
  */
 
-public class MarkAllBody {
+public class AccessTokenBody {
     @SerializedName("accesstoken")
     @Expose
     private String accesstoken;
 
-    public MarkAllBody(String accesstoken) {
+    public AccessTokenBody(String accesstoken) {
         this.accesstoken = accesstoken;
     }
 

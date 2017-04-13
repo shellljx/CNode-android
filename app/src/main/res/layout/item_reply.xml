@@ -3,24 +3,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:paddingBottom="5dp"
-    android:paddingLeft="5dp"
-    android:paddingRight="5dp">
-
-    <View
-        android:id="@+id/line"
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_marginBottom="10dp"
-        android:background="@color/gray"/>
+    android:padding="@dimen/activity_horizontal_margin">
 
     <com.makeramen.roundedimageview.RoundedImageView
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/iv_avatar"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_below="@id/line"
         android:layout_marginRight="5dp"
         android:scaleType="fitCenter"
         app:riv_corner_radius="5dp"/>
@@ -52,5 +41,37 @@
         android:layout_below="@id/tv_user_name"
         android:layout_marginTop="5dp"
         android:layout_toRightOf="@id/iv_avatar"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/tv_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/iv_up"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginRight="5dp"
+            android:src="@mipmap/ic_unup"/>
+
+        <TextView
+            android:id="@+id/tv_up_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="25dp"
+            android:text="0"
+            android:textColor="#8a8a8a"
+            android:textSize="@dimen/text_size_normal"/>
+
+        <ImageView
+            android:id="@+id/iv_reply"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:src="@mipmap/ic_comment_gray"/>
+
+    </LinearLayout>
 
 </RelativeLayout>

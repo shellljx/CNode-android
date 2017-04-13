@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.licrafter.cnode.R;
 import com.licrafter.cnode.base.BaseActivity;
+import com.licrafter.cnode.cache.UserCache;
 import com.licrafter.cnode.model.TopicDetailModel;
 import com.licrafter.cnode.model.entity.Reply;
 import com.licrafter.cnode.model.entity.TAB;
@@ -28,6 +29,7 @@ import com.licrafter.cnode.mvp.view.MvpView;
 import com.licrafter.cnode.utils.DateUtils;
 import com.licrafter.cnode.utils.ImageLoader;
 import com.licrafter.cnode.utils.SwipeRefreshUtils;
+import com.licrafter.cnode.utils.TopicDividerDecoration;
 import com.licrafter.cnode.widget.CNodeWebView;
 import com.licrafter.cnode.widget.richTextView.RichTextView;
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -91,6 +93,7 @@ public class TopicDetailActivity extends BaseActivity implements MvpView, View.O
         SwipeRefreshUtils.initStyle(mRefreshLayout);
         mAdapter = new DetailAdapter();
         mDetailRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mDetailRecyclerView.addItemDecoration(new TopicDividerDecoration(this));
         mDetailRecyclerView.setAdapter(mAdapter);
     }
 
@@ -225,7 +228,36 @@ public class TopicDetailActivity extends BaseActivity implements MvpView, View.O
                 case TYPE_HEADER:
                     return new ReplyCountHolder(LayoutInflater.from(TopicDetailActivity.this).inflate(R.layout.item_reply_count, parent, false));
                 case TYPE_ITEM:
-                    return new ReplyHolder(LayoutInflater.from(TopicDetailActivity.this).inflate(R.layout.item_reply, parent, false));
+                    final ReplyHolder reply = new ReplyHolder(LayoutInflater.from(TopicDetailActivity.this).inflate(R.layout.item_reply, parent, false));
+                    reply.iv_reply.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                        }
+                    });
+                    reply.iv_up.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (UserCache.getUserId() != null) {
+                                int position = reply.getAdapterPosition() - 1;
+                                Reply repEntity = mDetail.getData().getReplies().get(position);
+                                boolean up = repEntity.getUps().contains(UserCache.getUserId());
+                                int ups_count = repEntity.getUps().size();
+                                makeUp(!up, reply.iv_up);
+                                if (up) {
+                                    repEntity.getUps().remove(UserCache.getUserId());
+                                    reply.tv_up_count.setText(String.valueOf(ups_count - 1));
+                                } else {
+                                    repEntity.getUps().add(UserCache.getUserId());
+                                    reply.tv_up_count.setText(String.valueOf(ups_count + 1));
+                                }
+                                mPresenter.makeUp(repEntity.getId());
+                            } else {
+                                startActivity(new Intent(TopicDetailActivity.this, LoginActivity.class));
+                            }
+                        }
+                    });
+                    return reply;
                 case TYPE_EMPTY:
                     return new EmptyHolder(LayoutInflater.from(TopicDetailActivity.this).inflate(R.layout.item_empty, parent, false));
                 default:
@@ -242,6 +274,10 @@ public class TopicDetailActivity extends BaseActivity implements MvpView, View.O
                 reply.tv_user_name.setText(rep.getAuthor().getLoginname());
                 reply.tv_created_at.setText(DateUtils.format(rep.getCreate_at()));
                 reply.tv_content.setRichText(rep.getContent());
+                reply.tv_up_count.setText(String.valueOf(rep.getUps().size()));
+                if (UserCache.getUserId() != null) {
+                    makeUp(rep.getUps().contains(UserCache.getUserId()), reply.iv_up);
+                }
             } else if (holder instanceof ReplyCountHolder) {
                 ((ReplyCountHolder) holder).tv_reply_count.setText(String.format(getString(R.string.reply_count), mDetail.getData().getReplies().size()));
             }
@@ -272,14 +308,21 @@ public class TopicDetailActivity extends BaseActivity implements MvpView, View.O
                 }
             }
         }
+
+        private void makeUp(boolean up, ImageView imageView) {
+            imageView.setImageResource(up ? R.mipmap.ic_up : R.mipmap.ic_unup);
+        }
     }
 
     private class ReplyHolder extends RecyclerView.ViewHolder {
 
-        public RoundedImageView iv_avatar;
-        public TextView tv_user_name;
+        RoundedImageView iv_avatar;
+        TextView tv_user_name;
         TextView tv_created_at;
         RichTextView tv_content;
+        ImageView iv_up;
+        ImageView iv_reply;
+        TextView tv_up_count;
 
         ReplyHolder(View itemView) {
             super(itemView);
@@ -287,6 +330,9 @@ public class TopicDetailActivity extends BaseActivity implements MvpView, View.O
             tv_user_name = (TextView) itemView.findViewById(R.id.tv_user_name);
             tv_created_at = (TextView) itemView.findViewById(R.id.tv_created_at);
             tv_content = (RichTextView) itemView.findViewById(R.id.tv_content);
+            iv_up = (ImageView) itemView.findViewById(R.id.iv_up);
+            iv_reply = (ImageView) itemView.findViewById(R.id.iv_reply);
+            tv_up_count = (TextView) itemView.findViewById(R.id.tv_up_count);
         }
     }
 

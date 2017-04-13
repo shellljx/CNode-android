@@ -2,6 +2,7 @@ package com.licrafter.cnode.mvp.presenter;
 
 import com.licrafter.cnode.api.CNodeApi;
 import com.licrafter.cnode.cache.UserCache;
+import com.licrafter.cnode.model.AccessTokenBody;
 import com.licrafter.cnode.model.CollectionBody;
 import com.licrafter.cnode.model.TopicDetailModel;
 import com.licrafter.cnode.ui.activity.TopicDetailActivity;
@@ -41,6 +42,30 @@ public class TopicDetailPresenter extends BasePresenter<TopicDetailActivity> {
                         }
                     }
                 });
+    }
+
+    public void makeUp(String reply_id) {
+        android.util.Log.d("ljx", "post");
+        mCompositeSubscription.add(CNodeApi.getCNodeService()
+                .makeUp(new AccessTokenBody(UserCache.getUserToken()), reply_id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<Void>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        android.util.Log.d("ljx", e.toString());
+                    }
+
+                    @Override
+                    public void onNext(Void aVoid) {
+
+                    }
+                }));
     }
 
     public void makeCollected(boolean collect, String topic_id) {

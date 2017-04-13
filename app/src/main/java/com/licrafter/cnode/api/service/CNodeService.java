@@ -3,7 +3,7 @@ package com.licrafter.cnode.api.service;
 import com.licrafter.cnode.model.CollectionBody;
 import com.licrafter.cnode.model.LoginBody;
 import com.licrafter.cnode.model.LoginResultModel;
-import com.licrafter.cnode.model.MarkAllBody;
+import com.licrafter.cnode.model.AccessTokenBody;
 import com.licrafter.cnode.model.MarkResultModel;
 import com.licrafter.cnode.model.NotificationModel;
 import com.licrafter.cnode.model.PostTopicResultModel;
@@ -105,7 +105,7 @@ public interface CNodeService {
      * @return
      */
     @POST("message/mark_all")
-    Observable<MarkResultModel> markAllMsg(@Body MarkAllBody markAllBody);
+    Observable<MarkResultModel> markAllMsg(@Body AccessTokenBody markAllBody);
 
     /**
      * 创建新标题
@@ -133,4 +133,14 @@ public interface CNodeService {
      */
     @POST("topic_collect/de_collect ")
     Observable<Void> deCollectPost(@Body CollectionBody accessToken);
+
+    /**
+     * 点赞和取消点赞
+     *
+     * @param accessToken
+     * @param reply_id
+     * @return
+     */
+    @POST("reply/{reply_id}/ups")
+    Observable<Void> makeUp(@Body AccessTokenBody accessToken, @Path("reply_id") String reply_id);
 }

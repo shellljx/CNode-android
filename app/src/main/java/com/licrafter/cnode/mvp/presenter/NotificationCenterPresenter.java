@@ -2,7 +2,7 @@ package com.licrafter.cnode.mvp.presenter;
 
 import com.licrafter.cnode.api.CNodeApi;
 import com.licrafter.cnode.cache.UserCache;
-import com.licrafter.cnode.model.MarkAllBody;
+import com.licrafter.cnode.model.AccessTokenBody;
 import com.licrafter.cnode.model.MarkResultModel;
 import com.licrafter.cnode.model.NotificationModel;
 import com.licrafter.cnode.ui.activity.NotificationCenterActivity;
@@ -48,7 +48,7 @@ public class NotificationCenterPresenter extends BasePresenter<NotificationCente
 
     public void readAll() {
         mCompositeSubscription.add(CNodeApi.getCNodeService()
-                .markAllMsg(new MarkAllBody(UserCache.getUserToken()))
+                .markAllMsg(new AccessTokenBody(UserCache.getUserToken()))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<MarkResultModel>() {
