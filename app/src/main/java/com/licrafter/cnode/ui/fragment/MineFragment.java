@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.licrafter.cnode.R;
 import com.licrafter.cnode.base.BaseFragment;
@@ -193,7 +194,7 @@ public class MineFragment extends BaseFragment implements MvpView, View.OnClickL
                 startActivityForResult(new Intent(getActivity(), LoginActivity.class), REQ_LOGIN);
                 break;
             case R.id.btn_settings:
-                UserCache.clear();
+                Toast.makeText(getBaseActivity(), "这里啥都没有呢，亲", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.btn_notification:
                 if (UserCache.getUserName() == null) {
