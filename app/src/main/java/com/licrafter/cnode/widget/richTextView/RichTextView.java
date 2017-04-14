@@ -5,6 +5,7 @@ import android.support.v7.widget.AppCompatTextView;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 import android.util.AttributeSet;
 
 /**
@@ -35,6 +36,7 @@ public class RichTextView extends AppCompatTextView {
         }
         handleP(htmlSpannable);
         setText(htmlSpannable);
+        setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     private static void handleP(SpannableStringBuilder text) {

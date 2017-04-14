@@ -9,11 +9,16 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import com.licrafter.cnode.utils.IntentUtils;
+import com.licrafter.cnode.utils.LogUtils;
+
 /**
  * author: shell
  * date 2017/3/2 上午11:36
  **/
 public class CNodeWebView extends WebView {
+
+    private static final String TAG = CNodeWebView.class.getName();
 
     public CNodeWebView(Context context) {
         this(context, null);
@@ -74,8 +79,8 @@ public class CNodeWebView extends WebView {
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            android.util.Log.d("ljx","url = "+url);
-            view.loadUrl(url);
+            LogUtils.info(TAG, url);
+            IntentUtils.startBrower(getContext(), url);
             return true;
         }
 
@@ -90,7 +95,7 @@ public class CNodeWebView extends WebView {
 
         @JavascriptInterface
         public void showImageDetail(String url) {
-            Toast.makeText(context, url, Toast.LENGTH_SHORT).show();
+            IntentUtils.startBrower(getContext(), url);
         }
     }
 }

@@ -30,6 +30,7 @@ import com.licrafter.cnode.mvp.presenter.TopicDetailPresenter;
 import com.licrafter.cnode.mvp.view.MvpView;
 import com.licrafter.cnode.utils.DateUtils;
 import com.licrafter.cnode.utils.ImageLoader;
+import com.licrafter.cnode.utils.IntentUtils;
 import com.licrafter.cnode.utils.SwipeRefreshUtils;
 import com.licrafter.cnode.utils.TopicDividerDecoration;
 import com.licrafter.cnode.widget.CNodeWebView;
@@ -251,13 +252,7 @@ public class TopicDetailActivity extends BaseActivity implements MvpView, View.O
     }
 
     private void shareTopic() {
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_SEND);
-        intent.putExtra(Intent.EXTRA_TEXT, mDetail.getData().getTitle()
-                + " 链接>https://cnodejs.org/topic/" + mDetail.getData().getId()
-                + "\n\n来自CNode-Android客户端(https://github.com/shellljx/CNode-android)");
-        intent.setType("text/plain");
-        startActivity(Intent.createChooser(intent, "分享到"));
+        IntentUtils.shareTopic(this, mDetail.getData().getTitle(), mDetail.getData().getId());
     }
 
     public void makeUpFailed(String msg, int position) {
