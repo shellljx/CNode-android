@@ -4,7 +4,7 @@ android {
     signingConfigs {
         release {
             keyAlias 'cnode'
-            keyPassword '149162536max'
+            keyPassword 'licrafter'
             storeFile file('/Users/lijx/apk_sign/android_cnode.jks')
             storePassword 'licrafter'
         }
@@ -29,13 +29,37 @@ android {
         }
     }
     //为了解决部分第三方库重复打包了META-INF的问题
-    packagingOptions{
+    packagingOptions {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
     }
     lintOptions {
         abortOnError false
     }
+
+    applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            if (output.outputFile != null && output.outputFile.name.endsWith('.apk')
+                    &&'release'.equals(variant.buildType.name)) {
+                def apkFile = new File(
+                        output.outputFile.getParent(),
+                        "CNode_${variant.buildType.name}_v${variant.versionName}_${buildTime()}.apk")
+                output.outputFile = apkFile
+            }
+        }
+    }
+
+    productFlavors {
+        channel_kuan {
+            versionNameSuffix '_channel_kuan'
+        }
+    }
+}
+
+def buildTime() {
+    def date = new Date()
+    def formattedDate = date.format('yyyyMMdd')
+    return formattedDate
 }
 
 dependencies {
@@ -63,6 +87,6 @@ dependencies {
         exclude group: 'com.squareup.okhttp3'
     }
     // LeanCloud 基础包
-    compile ('cn.leancloud.android:avoscloud-sdk:v3.+')
+    compile 'cn.leancloud.android:avoscloud-sdk:v3.+'
     compile project(path: ':album')
 }
