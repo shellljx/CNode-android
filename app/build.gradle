@@ -34,13 +34,13 @@ android {
         exclude 'META-INF/NOTICE.txt'
     }
     lintOptions {
+        checkReleaseBuilds false
         abortOnError false
     }
-
     applicationVariants.all { variant ->
         variant.outputs.each { output ->
             if (output.outputFile != null && output.outputFile.name.endsWith('.apk')
-                    &&'release'.equals(variant.buildType.name)) {
+                    && 'release'.equals(variant.buildType.name)) {
                 def apkFile = new File(
                         output.outputFile.getParent(),
                         "CNode_${variant.buildType.name}_v${variant.versionName}_${buildTime()}.apk")
@@ -48,11 +48,7 @@ android {
             }
         }
     }
-
     productFlavors {
-        channel_kuan {
-            versionNameSuffix '_channel_kuan'
-        }
     }
 }
 
