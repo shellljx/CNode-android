@@ -36,9 +36,7 @@
         </provider>
 
         <activity
-            android:name=".ui.activity.WelcomeActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/WelcomeTheme">
+            android:name=".ui.activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -59,8 +57,6 @@
             android:name=".ui.activity.QRActivity"
             android:label=""
             android:screenOrientation="portrait"/>
-
-        <activity android:name=".ui.activity.MainActivity"/>
 
         <activity
             android:name=".ui.activity.NotificationCenterActivity"
