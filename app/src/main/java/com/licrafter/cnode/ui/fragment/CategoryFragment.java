@@ -10,14 +10,13 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 
 import com.licrafter.cnode.R;
 import com.licrafter.cnode.base.BaseFragment;
 import com.licrafter.cnode.cache.UserCache;
 import com.licrafter.cnode.model.entity.TAB;
 import com.licrafter.cnode.ui.activity.LoginActivity;
-import com.licrafter.cnode.ui.activity.TopicCreateActivity;
+import com.licrafter.cnode.ui.activity.MarkdownEditActivity;
 
 import butterknife.BindView;
 
@@ -75,7 +74,7 @@ public class CategoryFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 if (UserCache.getUserToken() != null) {
-                    startActivity(new Intent(getBaseActivity(), TopicCreateActivity.class));
+                    MarkdownEditActivity.createTopic(getBaseActivity());
                 } else {
                     startActivity(new Intent(getBaseActivity(), LoginActivity.class));
                 }

@@ -9,7 +9,7 @@ import com.licrafter.cnode.R;
 import com.licrafter.cnode.base.BaseFragment;
 import com.licrafter.cnode.cache.UserCache;
 import com.licrafter.cnode.ui.activity.LoginActivity;
-import com.licrafter.cnode.ui.activity.TopicCreateActivity;
+import com.licrafter.cnode.ui.activity.MarkdownEditActivity;
 import com.licrafter.cnode.utils.FragmentUtils;
 
 import butterknife.BindView;
@@ -57,7 +57,7 @@ public class HomePageFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 if (UserCache.getUserToken() != null) {
-                    startActivity(new Intent(getBaseActivity(), TopicCreateActivity.class));
+                    MarkdownEditActivity.createTopic(getBaseActivity());
                 } else {
                     startActivity(new Intent(getBaseActivity(), LoginActivity.class));
                 }

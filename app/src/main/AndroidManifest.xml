@@ -68,7 +68,7 @@
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".ui.activity.TopicCreateActivity"
+            android:name=".ui.activity.MarkdownEditActivity"
             android:label="@string/title_topic_create"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible"/>

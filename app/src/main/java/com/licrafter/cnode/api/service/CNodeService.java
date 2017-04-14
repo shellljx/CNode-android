@@ -7,6 +7,8 @@ import com.licrafter.cnode.model.AccessTokenBody;
 import com.licrafter.cnode.model.MarkResultModel;
 import com.licrafter.cnode.model.NotificationModel;
 import com.licrafter.cnode.model.PostTopicResultModel;
+import com.licrafter.cnode.model.ReplyBody;
+import com.licrafter.cnode.model.ReplyResultModel;
 import com.licrafter.cnode.model.TabModel;
 import com.licrafter.cnode.model.TopicDetailModel;
 import com.licrafter.cnode.model.UnReadCountModel;
@@ -143,4 +145,14 @@ public interface CNodeService {
      */
     @POST("reply/{reply_id}/ups")
     Observable<Void> makeUp(@Body AccessTokenBody accessToken, @Path("reply_id") String reply_id);
+
+    /**
+     * 发表评论
+     *
+     * @param topic_id
+     * @param replyBody
+     * @return
+     */
+    @POST("topic/{topic_id}/replies")
+    Observable<ReplyResultModel> reply(@Path("topic_id") String topic_id, @Body ReplyBody replyBody);
 }

@@ -8,6 +8,7 @@
     <string name="title_notification">消息</string>
     <string name="title_topic_detail">文章详情</string>
     <string name="title_topic_create">创建帖子</string>
+    <string name="title_reply_create">创建评论</string>
     <string name="title_notification_center">消息中心</string>
     <string name="title_login">登录</string>
     <string name="token_message">用户登录后，在设置页面可以看到自己的 accessToken。 建议各移动端应用使用手机扫码的形式获得 Token 登录</string>

@@ -1,10 +1,14 @@
 package com.licrafter.cnode.ui.fragment;
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 
 import com.licrafter.cnode.R;
 import com.licrafter.cnode.base.BaseFragment;
+import com.licrafter.cnode.ui.activity.MarkdownEditActivity;
 import com.licrafter.cnode.widget.richEditView.engine.PerformEditable;
 
 import butterknife.BindView;
@@ -21,6 +25,26 @@ public class MdEditFragment extends BaseFragment {
     EditText mInputTitle;
 
     private PerformEditable mPerformEditable;
+    private int mType = MarkdownEditActivity.NEW_TOPIC;
+    private String mAuthor;
+
+    public static MdEditFragment newInstance(int type, String author) {
+        MdEditFragment fragment = new MdEditFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt("type", type);
+        bundle.putString("author", author);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mType = getArguments().getInt("type");
+            mAuthor = getArguments().getString("author");
+        }
+    }
 
     @Override
     public int setContentView() {
@@ -36,6 +60,16 @@ public class MdEditFragment extends BaseFragment {
     @Override
     public void initView(View root) {
         mPerformEditable = new PerformEditable(mInputContent);
+        if (mType == MarkdownEditActivity.NEW_TOPIC) {
+            mInputTitle.setVisibility(View.VISIBLE);
+            mInputTitle.requestFocus();
+        } else {
+            mInputTitle.setVisibility(View.GONE);
+            mInputContent.requestFocus();
+        }
+        if (!TextUtils.isEmpty(mAuthor)) {
+            mInputContent.setText("@" + mAuthor);
+        }
     }
 
     @Override

@@ -7,6 +7,9 @@ import com.licrafter.cnode.model.CollectionBody;
 import com.licrafter.cnode.model.TopicDetailModel;
 import com.licrafter.cnode.ui.activity.TopicDetailActivity;
 
+import java.io.IOException;
+
+import retrofit2.adapter.rxjava.HttpException;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -44,7 +47,7 @@ public class TopicDetailPresenter extends BasePresenter<TopicDetailActivity> {
                 });
     }
 
-    public void makeUp(String reply_id) {
+    public void makeUp(String reply_id, final int position) {
         android.util.Log.d("ljx", "post");
         mCompositeSubscription.add(CNodeApi.getCNodeService()
                 .makeUp(new AccessTokenBody(UserCache.getUserToken()), reply_id)
@@ -58,7 +61,14 @@ public class TopicDetailPresenter extends BasePresenter<TopicDetailActivity> {
 
                     @Override
                     public void onError(Throwable e) {
-                        android.util.Log.d("ljx", e.toString());
+                        if (e instanceof HttpException) {
+                            try {
+                                String msg = ((HttpException) e).response().errorBody().string();
+                                getView().makeUpFailed(msg, position);
+                            } catch (IOException e1) {
+                                e1.printStackTrace();
+                            }
+                        }
                     }
 
                     @Override

@@ -2,23 +2,21 @@ package com.licrafter.cnode.mvp.presenter;
 
 import android.os.Environment;
 import android.os.SystemClock;
-import android.widget.Toast;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.ProgressCallback;
 import com.avos.avoscloud.SaveCallback;
-import com.licrafter.cnode.R;
 import com.licrafter.cnode.api.CNodeApi;
 import com.licrafter.cnode.cache.UserCache;
 import com.licrafter.cnode.model.PostTopicResultModel;
+import com.licrafter.cnode.model.ReplyBody;
+import com.licrafter.cnode.model.ReplyResultModel;
 import com.licrafter.cnode.model.entity.PostTopic;
-import com.licrafter.cnode.ui.activity.TopicCreateActivity;
+import com.licrafter.cnode.ui.activity.MarkdownEditActivity;
 import com.licrafter.cnode.utils.BitmapCompressUtil;
-import com.licrafter.cnode.widget.dialog.UploadingDialog;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
 
 import retrofit2.adapter.rxjava.HttpException;
 import rx.Observable;
@@ -26,18 +24,17 @@ import rx.Observer;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
  * Created by lijx on 2017/4/10.
  */
 
-public class TopicCreatePresenter extends BasePresenter<TopicCreateActivity> {
+public class MarkdownEditPresenter extends BasePresenter<MarkdownEditActivity> {
 
 
-    public void createPost(String token, String title, String tab, String content) {
-        PostTopic topic = new PostTopic(token, title, tab, content);
+    public void createPost(String title, String tab, String content) {
+        PostTopic topic = new PostTopic(UserCache.getUserToken(), title, tab, content);
         mCompositeSubscription.add(CNodeApi.getCNodeService().createTopic(topic)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -55,9 +52,9 @@ public class TopicCreatePresenter extends BasePresenter<TopicCreateActivity> {
 
                     @Override
                     public void onError(Throwable e) {
-                        if (e instanceof HttpException){
+                        if (e instanceof HttpException) {
                             HttpException exc = (HttpException) e;
-                            android.util.Log.d("ljx","code = "+exc.code()+"msg = "+exc.response().errorBody());
+                            android.util.Log.d("ljx", "code = " + exc.code() + "msg = " + exc.response().errorBody());
                             // TODO: 2017/4/12  
                         }
                         getView().onFailed(e);
@@ -66,6 +63,36 @@ public class TopicCreatePresenter extends BasePresenter<TopicCreateActivity> {
                     @Override
                     public void onNext(PostTopicResultModel result) {
                         getView().notifySendPostSuccess(result);
+                    }
+                }));
+    }
+
+    public void createReply(String topic_id, String content, String reply_id) {
+        ReplyBody body = new ReplyBody(UserCache.getUserToken(), content, reply_id);
+        mCompositeSubscription.add(CNodeApi.getCNodeService()
+                .reply(topic_id, body)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnTerminate(new Action0() {
+                    @Override
+                    public void call() {
+                        getView().dismissSendDialog();
+                    }
+                })
+                .subscribe(new Subscriber<ReplyResultModel>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        getView().onFailed(e);
+                    }
+
+                    @Override
+                    public void onNext(ReplyResultModel model) {
+                        getView().notifyReplySuccess(model);
                     }
                 }));
     }

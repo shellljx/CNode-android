@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.licrafter.cnode.R;
 import com.licrafter.cnode.base.BaseActivity;
@@ -42,6 +44,8 @@ import butterknife.BindView;
  **/
 public class TopicDetailActivity extends BaseActivity implements MvpView, View.OnClickListener {
 
+    private static final int REQ_REPLY = 0x112;
+
     @BindView(R.id.comments_recyclerview)
     RecyclerView mDetailRecyclerView;
     @BindView(R.id.toolbar)
@@ -50,6 +54,8 @@ public class TopicDetailActivity extends BaseActivity implements MvpView, View.O
     SwipeRefreshLayout mRefreshLayout;
     @BindView(R.id.layout_bottom_sheet)
     View mBottomSheet;
+    @BindView(R.id.comment_fab)
+    FloatingActionButton mReplyFab;
 
     //header
     @BindView(R.id.iv_avatar)
@@ -71,6 +77,7 @@ public class TopicDetailActivity extends BaseActivity implements MvpView, View.O
 
     private TopicDetailPresenter mPresenter = new TopicDetailPresenter();
     private DetailAdapter mAdapter;
+    private BottomSheetBehavior mBehavior;
     private TopicDetailModel mDetail;
     private String mTopicId;
     private boolean mIsCollected;
@@ -95,20 +102,20 @@ public class TopicDetailActivity extends BaseActivity implements MvpView, View.O
         mDetailRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mDetailRecyclerView.addItemDecoration(new TopicDividerDecoration(this));
         mDetailRecyclerView.setAdapter(mAdapter);
+        mBehavior = BottomSheetBehavior.from(mBottomSheet);
     }
 
     @Override
     public void setListeners() {
+        mReplyFab.setOnClickListener(this);
+        iv_collect.setOnClickListener(this);
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 mPresenter.getTopicDetailById(mTopicId);
             }
         });
-
-        iv_collect.setOnClickListener(this);
-        BottomSheetBehavior behavior = BottomSheetBehavior.from(mBottomSheet);
-        behavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+        mBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
                 switch (newState) {
@@ -128,6 +135,32 @@ public class TopicDetailActivity extends BaseActivity implements MvpView, View.O
 
             }
         });
+        mDetailRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy <= 0) {
+                    mReplyFab.show();
+                } else {
+                    mReplyFab.hide();
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+            mDetailRecyclerView.scrollToPosition(0);
+            mBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
@@ -203,7 +236,18 @@ public class TopicDetailActivity extends BaseActivity implements MvpView, View.O
                 mPresenter.makeCollected(!mIsCollected, mDetail.getData().getId());
                 setCollect(!mIsCollected);
                 break;
+            case R.id.comment_fab:
+                MarkdownEditActivity.createReply(this, REQ_REPLY, mDetail.getData().getId(), null, null);
+                break;
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && requestCode == REQ_REPLY) {
+            mPresenter.getTopicDetailById(mTopicId);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void shareTopic() {
@@ -214,6 +258,12 @@ public class TopicDetailActivity extends BaseActivity implements MvpView, View.O
                 + "\n\n来自CNode-Android客户端(https://github.com/shellljx/CNode-android)");
         intent.setType("text/plain");
         startActivity(Intent.createChooser(intent, "分享到"));
+    }
+
+    public void makeUpFailed(String msg, int position) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+        mDetail.getData().getReplies().get(position).getUps().remove(UserCache.getUserId());
+        mAdapter.notifyItemChanged(position + 1);
     }
 
     private class DetailAdapter extends RecyclerView.Adapter {
@@ -232,7 +282,8 @@ public class TopicDetailActivity extends BaseActivity implements MvpView, View.O
                     reply.iv_reply.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-
+                            Reply repEntity = mDetail.getData().getReplies().get(reply.getAdapterPosition() - 1);
+                            MarkdownEditActivity.createReply(TopicDetailActivity.this, REQ_REPLY, mDetail.getData().getId(), repEntity.getId(), repEntity.getAuthor().getLoginname());
                         }
                     });
                     reply.iv_up.setOnClickListener(new View.OnClickListener() {
@@ -251,7 +302,7 @@ public class TopicDetailActivity extends BaseActivity implements MvpView, View.O
                                     repEntity.getUps().add(UserCache.getUserId());
                                     reply.tv_up_count.setText(String.valueOf(ups_count + 1));
                                 }
-                                mPresenter.makeUp(repEntity.getId());
+                                mPresenter.makeUp(repEntity.getId(), position);
                             } else {
                                 startActivity(new Intent(TopicDetailActivity.this, LoginActivity.class));
                             }
