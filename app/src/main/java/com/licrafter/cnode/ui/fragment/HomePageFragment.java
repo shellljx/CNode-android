@@ -46,8 +46,6 @@ public class HomePageFragment extends BaseFragment {
             TopicListFragment fragment = TopicListFragment.instance(null);
             fragment.setUserVisibleHint(true);
             FragmentUtils.replace(getChildFragmentManager(), R.id.home_page_content, fragment, false, TopicListFragment.class.getName());
-        } else {
-            FragmentUtils.findFragment(getChildFragmentManager(), TopicListFragment.class).setUserVisibleHint(true);
         }
     }
 
