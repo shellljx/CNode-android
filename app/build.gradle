@@ -10,7 +10,7 @@ android {
         }
     }
     compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "com.licrafter.cnode"
         minSdkVersion 16
@@ -37,17 +37,14 @@ android {
         checkReleaseBuilds false
         abortOnError false
     }
-    applicationVariants.all { variant ->
-        variant.outputs.each { output ->
-            if (output.outputFile != null && output.outputFile.name.endsWith('.apk')
-                    && 'release'.equals(variant.buildType.name)) {
-                def apkFile = new File(
-                        output.outputFile.getParent(),
-                        "CNode_${variant.buildType.name}_v${variant.versionName}_${buildTime()}.apk")
-                output.outputFile = apkFile
-            }
+    android.applicationVariants.all { variant ->
+        Date date = new Date();
+
+        variant.outputs.all {
+            outputFileName = "CNode-${variant.name}-${variant.versionName}-${date.format("yyyy-MM-dd")}.apk"
         }
     }
+
     productFlavors {
     }
 }
